@@ -32,7 +32,6 @@ Este proyecto es una aplicación web de inteligencia artificial diseñada para p
 - **API Gemini** 
 
 
-
 ---
 
 ## Funciones de la IA
@@ -83,7 +82,7 @@ Este proyecto es una aplicación web de inteligencia artificial diseñada para p
 
 ## Enfoques de Implementación
 
-### Opción 1: Enfoque Cliente con "Graceful Degradation"
+###  Opción 1: Enfoque Cliente con "Graceful Degradation"
 
 - **Descripción:**  
   Diseñado para Single Page Applications (SPAs), esta opción utiliza la mejor API disponible y recurre a una opción universal si la preferida falla.
@@ -99,11 +98,8 @@ Este proyecto es una aplicación web de inteligencia artificial diseñada para p
      - Simula un clic en un enlace temporal para iniciar la descarga.
      - Libera la URL del objeto.
 
-- **Pros y Contras:**  
-  - **Pros:** Experiencia óptima en navegadores modernos y compatibilidad en todos los demás.  
-  - **Contras:** Requiere mantener dos lógicas de guardado y la generación del archivo se realiza en el cliente.
 
-### Opción 2: Implementación con Next.js (Ruta de API)
+### Opción 2: Enfoques de servidor por next (API) 
 
 - **Descripción:**  
   Utiliza la arquitectura de Next.js para separar la lógica del frontend y backend, moviendo la generación de archivos al servidor.
@@ -119,13 +115,6 @@ Este proyecto es una aplicación web de inteligencia artificial diseñada para p
      - Realiza una simple llamada (usando `fetch` o `axios`) a la ruta de API.
      - El navegador, gracias a las cabeceras, inicia la descarga automáticamente.
 
-- **Ventajas:**  
-  - **Código Organizado:** Lógica separada entre backend y frontend.  
-  - **Potencia de Node.js:** Acceso a un amplio ecosistema de librerías para manipulación de archivos y llamadas a APIs.  
-  - **Seguridad:** Claves y lógica sensible se mantienen en el servidor.  
-  - **Simplicidad en el Cliente:** El cliente sólo realiza la solicitud y descarga el archivo.
-
----
 
 ## Utilidades Adicionales del Asistente
 
@@ -209,11 +198,11 @@ First, run the development server:
 
 ```bash
 npm run dev
-# or
+# o
 yarn dev
-# or
+# o
 pnpm dev
-# or
+# o
 bun dev
 ```
 
