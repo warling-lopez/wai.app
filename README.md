@@ -6,6 +6,24 @@ Este proyecto es una aplicación web de inteligencia artificial diseñada para p
 
 ## Integraciones
 
+### Office 365 Tools
+- Word
+- Excel
+- PowerPoint
+- Outlook
+- OneDrive
+- Power BI
+### Google Workspace Tools
+- Gmail
+- Google Calendar
+- Google Drive
+- Google Docs
+- Google Sheets
+- Google Meet
+- Google Forms
+- Google Sites
+
+
 ### Integración con modelos de lenguaje avanzados para el procesamiento y generación de contenido. 
 
 - **API Deepseek**   
