@@ -183,8 +183,6 @@ Este proyecto es una aplicación web de inteligencia artificial diseñada para p
 
 ---
 
-## Conclusión
-
 Este asistente virtual de productividad ofimática combina la potencia de la inteligencia artificial con integraciones robustas para ofrecer una solución completa y segura en entornos de oficina. Con capacidades que van desde la generación y manipulación de contenido hasta la automatización de tareas y gestión de información, esta aplicación está diseñada para optimizar y simplificar la jornada laboral.
 
 ---
