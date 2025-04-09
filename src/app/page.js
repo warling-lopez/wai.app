@@ -2,8 +2,14 @@ import React from 'react'
 import { InputReq } from '@/components/ui/inputReq'
 function Home() {
   return (
-    <div className="flex h-[100vh] justify-center items-center">
-     <InputReq/>
+    <div className="grid h-[100vh] w-full col-span-3">
+      <div className='flex justify-center items-center'>        
+      </div>
+      <div className='flex justify-center items-center'>
+        <InputReq className=""/>
+      </div>
+     
+     
   </div>
 )}
 
