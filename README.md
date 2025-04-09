@@ -25,7 +25,6 @@ Este proyecto es una aplicación web de inteligencia artificial diseñada para p
 
 
 ### Integración con modelos de lenguaje avanzados para el procesamiento y generación de contenido. 
-
 - **API Deepseek**   
 - **API Perplexity**   
 - **API GPTs** 
