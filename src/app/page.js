@@ -2,11 +2,12 @@
 import React, { useState } from "react";
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
-
+import ReactMarkdown from 'react-markdown';
+  
 function Home() {
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Hola, ¿cómo estás?" },
-    { role: "user", content: "Bien, ¿y tú?" },
+    { role: "assistant", content:"" },
+    { role: "user", content: "wercome user" },
   ]);
   const [isTyping, setIsTyping] = useState(false);
   async function handleSendMessage(userInput) {

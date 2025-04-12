@@ -11,17 +11,17 @@ export async function POST(request) {
     const userMessage = body.message || "Hola"; // Fallback en caso de que esté vacío
 
     const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo-1106",
       messages: [
-        { role: "system", content: "Responde usando Markdown. Usa encabezados, listas con puntos, etc." },
+        { role: "system", content: "Responde usando HTML. Usa encabezados, listas con puntos, etc. y si quieres dar estilos usa taildwincss" },
         { role: "user", content: userMessage },
       ],
     });
 
     const respuesta = chatCompletion.choices[0].message.content;
-
+    const formattedResponse = respuesta.replace(/\n/g, "\n\n");
     console.log("Respuesta del modelo:", respuesta);
-    return new Response(JSON.stringify({ message: respuesta }), {
+    return new Response(JSON.stringify({ message: formattedResponse }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
