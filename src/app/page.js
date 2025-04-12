@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
-import ReactMarkdown from 'react-markdown';
   
 function Home() {
   const [messages, setMessages] = useState([
@@ -59,14 +58,15 @@ function Home() {
       setIsTyping(false);
     }
   }
-
+  
   return (
     <div className="grid h-[100vh] w-full col-span-3 ">
-      <div className="flex flex-col w-[80%] md:w-[40%] items-center p-4 overflow-y-auto">
-        <div className="w-full">
+      <div className="flex flex-col w-[100%] md:w-[100%] items-center p-4 overflow-y-auto">
+        <div className="w-full top-0 md:w-[40%]">
           {messages.map((msg, idx) => (
             <Msg key={idx} role={msg.role} content={msg.content} />
           ))}
+        
         </div>
       </div>
       <div className="flex justify-center items-center p-4">

@@ -13,13 +13,13 @@ export async function POST(request) {
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo-1106",
       messages: [
-        { role: "system", content: "Responde usando HTML. Usa encabezados, listas con puntos, etc. y si quieres dar estilos usa taildwincss" },
+        { role: "system", content: "Responde utilizando Markdown, incluye encabezados, listas numeradas, y usa negritas para resaltar términos importantes. Organiza la información en secciones con títulos." },
         { role: "user", content: userMessage },
       ],
     });
 
     const respuesta = chatCompletion.choices[0].message.content;
-    const formattedResponse = respuesta.replace(/\n/g, "\n\n");
+    const formattedResponse = respuesta.replace(/\n/g, "\n");
     console.log("Respuesta del modelo:", respuesta);
     return new Response(JSON.stringify({ message: formattedResponse }), {
       status: 200,

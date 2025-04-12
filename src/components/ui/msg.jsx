@@ -1,5 +1,6 @@
 import React from "react";
-import { cn } from "@/lib/utils"; // o reemplaza con clsx si no tienes esta utilidad
+import { cn } from "@/lib/utils"; // o usa clsx si no tienes cn
+import ReactMarkdown from "react-markdown";
 
 const Msg = ({ role = "user", content = "" }) => {
   const isUser = role === "user";
@@ -13,13 +14,14 @@ const Msg = ({ role = "user", content = "" }) => {
     >
       <div
         className={cn(
-          "max-w px-4 py-2 rounded-xl text-md",
+          "max-w-[80%] px-4 py-2 rounded-xl text-md whitespace-pre-wrap",
           isUser
             ? "bg-gray-300 text-gray-900 rounded-br-none"
-            : "text-gray-900 rounded-bl-none"
+            : "bg-white text-gray-900 rounded-bl-none"
         )}
-        dangerouslySetInnerHTML={{ __html: content }} // Renderiza el HTML directamente
-      />
+      >
+        <ReactMarkdown>{content}</ReactMarkdown>
+      </div>
     </div>
   );
 };
