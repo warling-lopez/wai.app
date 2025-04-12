@@ -20,7 +20,7 @@ function InputReq({
   };
 
   return (
-    <div className="rounded-4xl pr-1 pl-1 border shadow-xl w-[80%] md:w-[40vw] mb-10">
+    <div className="rounded-4xl pr-1 pl-1 border shadow-xl w-[90%] md:w-[40vw] mb-5">
       <input
         type={type}
         value={input}
