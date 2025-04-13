@@ -10,43 +10,39 @@ function InputReq({ className, type = "text", onSend, ...props }) {
 
   const handleSendClick = () => {
     if (input.trim() !== "") {
-      onSend(input); // Envía el texto al padre
-      setInput(""); // Limpia el input después de enviar
+      onSend(input);
+      setInput("");
+
+      // Resetear altura después de enviar
+      const el = inputRef.current;
+      if (el) {
+        el.style.height = "60px";
+      }
     }
   };
 
-  React.useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        handleSendClick();
-      }
-    };
-
-    const inputEl = inputRef.current;
-    if (inputEl) {
-      inputEl.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      if (inputEl) {
-        inputEl.removeEventListener("keydown", handleKeyDown);
-      }
-    };
-  }, [input]); // También se puede dejar vacío si prefieres no actualizar con cada cambio
-
   return (
     <div className="rounded-4xl pr-1 pl-1 border shadow-xl w-[90vw] md:w-[40vw] mb-5">
-      <input
+      <textarea
         ref={inputRef}
-        type={type}
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) => {
+          setInput(e.target.value);
+          e.target.style.height = "60px"; // Resetear altura
+          e.target.style.height = e.target.scrollHeight + "px"; // Autoexpandir
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSendClick();
+          }
+        }}
         placeholder="Pregúntale a WALLY"
         className={cn(
-          "file:text-foreground placeholder:text-muted-foreground selection:bg-primary text-gray-700 selection:text-primary-foreground dark:bg-input/30 border-input flex h-15 w-full min-w-0 border-0 bg-transparent px-3 py-1 text-base outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-xl",
+          "max-h-[200px] resize-none overflow-hidden placeholder:text-muted-foreground selection:bg-primary text-gray-700 selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 border-0 bg-transparent px-3 py-2 text-base outline-none h-[60px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-xl",
           className
         )}
+        rows={1}
         {...props}
       />
       <div className="w-full flex justify-end">
