@@ -1,27 +1,44 @@
-"use client"
+"use client";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 
-function InputReq({
-  className,
-  type = "text",
-  onSend,
-  ...props
-}) {
+function InputReq({ className, type = "text", onSend, ...props }) {
   const [input, setInput] = React.useState("");
+  const inputRef = React.useRef(null);
 
   const handleSendClick = () => {
     if (input.trim() !== "") {
-      onSend(input);        // Envía el texto al padre
-      setInput("");         // Limpia el input después de enviar
+      onSend(input); // Envía el texto al padre
+      setInput(""); // Limpia el input después de enviar
     }
   };
+
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        handleSendClick();
+      }
+    };
+
+    const inputEl = inputRef.current;
+    if (inputEl) {
+      inputEl.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      if (inputEl) {
+        inputEl.removeEventListener("keydown", handleKeyDown);
+      }
+    };
+  }, [input]); // También se puede dejar vacío si prefieres no actualizar con cada cambio
 
   return (
     <div className="rounded-4xl pr-1 pl-1 border shadow-xl w-[90vw] md:w-[40vw] mb-5">
       <input
+        ref={inputRef}
         type={type}
         value={input}
         onChange={(e) => setInput(e.target.value)}
@@ -33,7 +50,10 @@ function InputReq({
         {...props}
       />
       <div className="w-full flex justify-end">
-        <Button onClick={handleSendClick} className="rounded-full relative right-2 bottom-2">
+        <Button
+          onClick={handleSendClick}
+          className="rounded-full relative right-2 bottom-2"
+        >
           <PaperPlaneIcon />
         </Button>
       </div>

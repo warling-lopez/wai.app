@@ -19,9 +19,8 @@ export async function POST(request) {
     });
 
     const respuesta = chatCompletion.choices[0].message.content;
-    const formattedResponse = respuesta.replace(/\n/g, "\n");
     console.log("Respuesta del modelo:", respuesta);
-    return new Response(JSON.stringify({ message: formattedResponse }), {
+    return new Response(JSON.stringify({ message: respuesta  }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
