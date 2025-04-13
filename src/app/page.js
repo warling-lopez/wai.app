@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react"; // ← Agregado useRef y useEffect
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
   
@@ -9,6 +9,13 @@ function Home() {
     { role: "user", content: "wercome user" },
   ]);
   const [isTyping, setIsTyping] = useState(false);
+
+  const bottomRef = useRef(null); // ← Agregado
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]); // ← Scroll automático
+
   async function handleSendMessage(userInput) {
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
     setIsTyping(true);
@@ -66,7 +73,7 @@ function Home() {
           {messages.map((msg, idx) => (
             <Msg key={idx} role={msg.role} content={msg.content} />
           ))}
-        
+          <div ref={bottomRef} /> {/* ← Scroll final */}
         </div>
       </div>
       <div className="flex justify-center items-center p-4">
