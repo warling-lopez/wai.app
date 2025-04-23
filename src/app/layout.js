@@ -24,7 +24,10 @@ export  default async function RootLayout({ children }) {
           <AppSidebar/>
           <main className="w-full grid-rows-2">
             <SidebarTrigger style={{ fontSize: '8rem' }} className={'absolute text-4xl'}/>
-            {children}
+            <div className="m-2">
+              {children}
+            </div>
+            
           </main>
         </SidebarProvider>
       </body>
