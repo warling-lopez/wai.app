@@ -7,20 +7,7 @@ import Msg from "@/components/ui/msg";
 export default function SpeechClient() {
   const [loading, setLoading] = useState(false);
 
-  const generarAudio = async () => {
-    setLoading(true);
-    const res = await fetch('/api/speech', {
-      method: 'POST',
-      body: JSON.stringify({ text: "El sistema adámico se refiere a una variedad de creencias y doctrinas, predominantemente religiosas, centradas en la figura de Adán, el primer hombre según las tradiciones abrahámicas (judaísmo, cristianismo e islam). No hay un único \"sistema adámico\" universalmente aceptado, sino más bien diferentes interpretaciones y énfasis sobre la importancia de Adán en la teología y la historia de la humanidad. Aquí te desgloso algunos aspectos comunes asociados al concepto del sistema adámico: Adán como figura central: Se le considera el prototipo de la humanidad, creado directamente por Dios, perfecto y en un estado de inocencia original. La Caída: El evento en el que Adán y Eva desobedecen a Dios, comiendo del fruto prohibido del árbol del conocimiento del bien y del mal. Este acto se considera la causa de la introducción del pecado, el sufrimiento y la muerte en el mundo. Pecado original: La creencia de que la naturaleza humana está inherentemente corrompida debido al pecado de Adán. Las diferentes denominaciones cristianas tienen diferentes interpretaciones sobre cómo se transmite este pecado y sus efectos. La promesa de redención: En muchas interpretaciones, especialmente en el cristianismo, la figura de Adán se contrapone a la figura de Jesucristo. Cristo se considera el \"nuevo Adán\" que vino a redimir a la humanidad de las consecuencias del pecado adámico, ofreciendo salvación a través de su sacrificio. Justicia social y raza: Históricamente, algunas interpretaciones erróneas del concepto de Adán, especialmente en contextos de supremacía blanca, se han utilizado para justificar la esclavitud o la desigualdad racial. Estas interpretaciones, basadas en ideas pseudocientíficas y teológicas, afirmaban que diferentes \"razas\" descendían de diferentes \"Adanes\" o que algunas razas eran anteriores a Adán y, por lo tanto, no eran plenamente humanas. Es crucial señalar que estas interpretaciones son altamente problemáticas, científicamente refutadas y moralmente reprobables. La idea de la descendencia común de toda la humanidad de Adán generalmente promueve la idea de la igualdad inherente de todos los seres humanos. Restauracionismo: Algunas religiones restauracionistas, como el mormonismo (Iglesia de Jesucristo de los Santos de los Últimos Días), tienen perspectivas únicas sobre Adán, considerándolo un ser glorificado que vino a la Tierra para iniciar el plan de salvación. En resumen: El sistema adámico, en su sentido más amplio, se refiere al conjunto de creencias relacionadas con Adán, la Caída, el pecado original y la promesa de redención. Es importante examinar cualquier discusión sobre este tema con un ojo crítico, especialmente cuando se utiliza para justificar la desigualdad o la discriminación. Es fundamental estudiar las diferentes interpretaciones del sistema adámico en su contexto religioso y cultural original, evitando el uso de conceptos fuera de contexto para defender ideologías perjudiciales." }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    audio.play();
-    setLoading(false);
-  };
+  
   const funciones = () => {
     //  funciones que deseo ejecutar
     generarAudio();
@@ -82,12 +69,29 @@ export default function SpeechClient() {
         console.error("Error al obtener respuesta:", error);
         setMessages((prev) => [
           ...prev,
-          { role: "assistant", content: "Error al contactar la API." },
+          { role: "assistant", content: "Error al contactar la API." }, 
         ]);
         setIsTyping(false);
       }
     }
+  const generarAudio = async ()=> {
+    setLoading(true);
+
+    const res = await fetch('/api/speech', {
+      method: 'POST',
+      body: JSON.stringify({ text: `${messages}` }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.play();
+    setLoading(false); 
+    console.log(`Audio generado y reproducido ${url}`);
+  };
     
+
   return (<>
         <div className="grid h-[100vh] w-full col-span-3 ">
           <div className="flex flex-col w-[100%] md:w-[100%] items-center p-4 overflow-y-auto">

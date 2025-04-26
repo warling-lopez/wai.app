@@ -30,5 +30,5 @@ export async function POST(request) {
     return new Response(JSON.stringify({ error: "Error interno" }), {
       status: 500,
     });
-  }
+  }               
 }
