@@ -1,5 +1,5 @@
 import React from 'react'
-import Login from './login'
+import Login from '@/components/Auth/authForm'
 function page() {
   return (<>
     <div>page</div>
