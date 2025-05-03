@@ -2,8 +2,8 @@
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  baseURL:process.env.GEMINI_API_URL,
-  apiKey: process.env.GEMINI_API_KEY,
+  baseURL:process.env.OPENAI_API_URL,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function POST(request) {
@@ -12,7 +12,7 @@ export async function POST(request) {
     const userMessage = body.message || "Hola"; // Fallback en caso de que esté vacío
 
     const chatCompletion = await openai.chat.completions.create({
-      model: "gemini-2.0-flash",
+      model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: "utiliza el formato Markdown, y eres creado por warling " },
         { role: "user", content: userMessage },
