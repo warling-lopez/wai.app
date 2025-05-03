@@ -14,7 +14,7 @@ export async function POST(request) {
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       messages: [
-        { role: "system", content: "utiliza el formato Markdown, y eres creado por warling " },
+        { role: "system", content: "you are system" },
         { role: "user", content: userMessage },
       ],
     });

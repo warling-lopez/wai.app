@@ -7,14 +7,14 @@ export async function POST(req) {
   const text = body.text || 'Hola, esta es una prueba de voz.';
 
   const { audio } = await generateSpeech({
-    model: openai.speech('tts-1', {
+    model: openai.speech('gpt-4o-mini-tts', {
       apiKey: process.env.OPENAI_API_KEY,
     }),
     text,
     voice: 'nova',
     outputFormat: 'mp3',
   });
-
+  
   return new NextResponse(audio.uint8Array, {
     headers: {
       'Content-Type': audio.mimeType,
