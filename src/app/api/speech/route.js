@@ -11,7 +11,7 @@ export async function POST(req) {
       apiKey: process.env.OPENAI_API_KEY,
     }),
     text,
-    voice: 'nova',
+    voice: 'shimmer',
     outputFormat: 'mp3',
   });
   

@@ -12,7 +12,7 @@ export async function POST(request) {
     const userMessage = body.message || "Hola"; // Fallback en caso de que esté vacío
 
     const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
+      model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: "you are system" },
         { role: "user", content: userMessage },

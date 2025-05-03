@@ -13,7 +13,7 @@ export default function SpeechClient() {
   };
   const [messages, setMessages] = useState([
     { role: "assistant", content: "" },
-    { role: "user", content: "wercome user" },
+    { role: "user", content: "welcome user" },
   ]);
   const lastAssistantMessage = messages.findLast((m) => m.role === "assistant");
 
@@ -82,7 +82,6 @@ export default function SpeechClient() {
         body: JSON.stringify({ text: `${lastAssistantMessage.content}` }),
         headers: { "Content-Type": "application/json" },
       });
-      console.log(lastAssistantMessage.content);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
