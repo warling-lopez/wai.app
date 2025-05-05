@@ -44,14 +44,20 @@ export default function AudioPlayer({ assistantResponse }) {
     
     return () => clearTimeout(debounceTimeout.current);
   }, [assistantResponse]);
-  */
+*/
   return (
     <div className="p-4 flex justify-center">
       <button
         onClick={() => generarAudio(assistantResponse)}
         disabled={loading || !assistantResponse}
       >
-        {loading ? "Generando..." : <Button variant="ghost"><GraphicEqSharpIcon /></Button>}
+        {loading ? (
+          "Generando..."
+        ) : (
+          <Button variant="ghost">
+            <GraphicEqSharpIcon />
+          </Button>
+        )}
       </button>
     </div>
   );

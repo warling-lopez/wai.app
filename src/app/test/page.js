@@ -1,7 +1,6 @@
 "use client";
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
-import TTS from "@/components/ui/speech/TTS"
 import { useEffect, useRef, useState } from "react";
 
 export default function SpeechClient() {
@@ -75,8 +74,7 @@ export default function SpeechClient() {
           </div>
         </div>
         <div className="flex justify-center items-center p-4">
-          <InputReq onSend={handleSendMessage} />
-          <TTS assistantResponse={lastAssistantMessage?.content} />
+          <InputReq onSend={handleSendMessage} findContext={lastAssistantMessage} />
         </div>
       </div>
     </>

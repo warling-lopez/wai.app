@@ -2,10 +2,12 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import StopIcon from '@mui/icons-material/Stop';
 
-function InputReq({ className, type = "text", onSend, ...props }) {
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import StopIcon from "@mui/icons-material/Stop";
+import TTS from "./speech/TTS";
+
+function InputReq({ className, findContext, type = "text", onSend, ...props }) {
   const [input, setInput] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const inputRef = React.useRef(null);
@@ -52,7 +54,8 @@ function InputReq({ className, type = "text", onSend, ...props }) {
         disabled={isLoading}
         {...props}
       />
-      <div className="flex justify-end">
+      <div className="flex items-center justify-end">
+        <TTS className="relative right-1 bottom-2" assistantResponse={findContext }/>
         <Button
           onClick={handleSendClick}
           variant="circle"

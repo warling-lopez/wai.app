@@ -2,7 +2,7 @@
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
 import { useEffect, useRef, useState } from "react";
-
+import TTS from "@/components/ui/speech/TTS"
 export default function SpeechClient() {
   const [messages, setMessages] = useState([
     { role: "assistant", content: "" },
