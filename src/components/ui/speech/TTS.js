@@ -27,13 +27,13 @@ export default function TSS({ assistantResponse }) {
   };
 
   // Descomenta esto si quieres que se reproduzca automáticamente al cambiar el mensaje
-  /*
+  
   useEffect(() => {
     if (assistantResponse) {
       generarAudio();
     }
-  }, [assistantResponse]);
-  */
+  }, []);
+  
 
   return (
     <div className="p-4 flex justify-center">
