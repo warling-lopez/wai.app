@@ -1,14 +1,10 @@
 "use client";
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
-import TTS from "@/components/ui/speech/TTS"
 import { useEffect, useRef, useState } from "react";
 
 export default function SpeechClient() {
-  const [messages, setMessages] = useState([
-    { role: "assistant", content: "" },
-    { role: "user", content: "welcome user" },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef(null);
 
@@ -61,7 +57,19 @@ export default function SpeechClient() {
     }
   }
 
-  const lastAssistantMessage = messages.findLast((m) => m.role === "assistant");
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    // Guardar la última respuesta del asistente en sessionStorage solo en cliente
+    const lastAssistantMessage = messages
+      .slice()  // Copiar el array para evitar mutaciones
+      .reverse()  // Invertir el orden
+      .find((m) => m.role === "assistant");  // Buscar el primer mensaje con el rol de "assistant"
+    
+    if (lastAssistantMessage && typeof window !== "undefined") {
+      sessionStorage.setItem("Respuesta del modelo", JSON.stringify(lastAssistantMessage.content));
+    }
+  }, [messages]);
 
   return (
     <>
@@ -76,7 +84,6 @@ export default function SpeechClient() {
         </div>
         <div className="flex justify-center items-center p-4">
           <InputReq onSend={handleSendMessage} />
-          <TTS assistantResponse={lastAssistantMessage?.content} />
         </div>
       </div>
     </>

@@ -2,20 +2,34 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import StopIcon from '@mui/icons-material/Stop';
+import TTS from "@/components/ui/speech/TTS";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import StopIcon from "@mui/icons-material/Stop";
 
 function InputReq({ className, type = "text", onSend, ...props }) {
   const [input, setInput] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const [resModelo, setResModelo] = React.useState("");
   const inputRef = React.useRef(null);
 
+  // 🧠 Escuchar cambios en sessionStorage cada 500ms
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      const nuevaRespuesta = sessionStorage.getItem("Respuesta del modelo") || "";
+      setResModelo((prev) => {
+        return prev !== nuevaRespuesta ? nuevaRespuesta : prev;
+      });
+    }, 500); // Ajusta el intervalo si lo necesitas
+
+    return () => clearInterval(interval); // limpieza
+  }, []);
+  
   const handleSendClick = async () => {
     if (input.trim() === "") return;
 
     setIsLoading(true);
     try {
-      await onSend(input); // asegúrate de que `onSend` sea async
+      await onSend(input);
       setInput("");
 
       const el = inputRef.current;
@@ -53,6 +67,7 @@ function InputReq({ className, type = "text", onSend, ...props }) {
         {...props}
       />
       <div className="flex justify-end">
+        <TTS assistantResponse={resModelo} />
         <Button
           onClick={handleSendClick}
           variant="circle"

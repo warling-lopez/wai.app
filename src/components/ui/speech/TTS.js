@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import {Button} from "@/components/ui/button"
-import GraphicEqSharpIcon from '@mui/icons-material/GraphicEqSharp';
-export default function TSS({ assistantResponse }) {
+import { Button } from "@/components/ui/button";
+import GraphicEqSharpIcon from "@mui/icons-material/GraphicEqSharp";
+export default function TSS({ className, assistantResponse }) {
   const [loading, setLoading] = useState(false);
 
   const generarAudio = async () => {
@@ -29,17 +29,30 @@ export default function TSS({ assistantResponse }) {
   // Descomenta esto si quieres que se reproduzca automáticamente al cambiar el mensaje
   /*
   useEffect(() => {
-    if (assistantResponse) {
-      generarAudio();
+    if (!assistantResponse || assistantResponse === lastPlayedRef.current) return;
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
     }
+
+    debounceTimeout.current = setTimeout(() => {
+      generarAudio(assistantResponse);
+    }, 300); // espera 300ms antes de ejecutar (ajustable)
+    
+    return () => clearTimeout(debounceTimeout.current);
   }, [assistantResponse]);
   */
 
   return (
-    <div className="p-4 flex justify-center">
-      <button onClick={generarAudio} disabled={loading || !assistantResponse}>
-        {loading ? "Generando..." : (<Button variant="ghost"><GraphicEqSharpIcon/></Button>)}
-      </button>
+    <div>
+      <Button
+        variant="ghost"
+        onClick={generarAudio}
+        className="relative right-1 bottom-2"
+        disabled={loading || !assistantResponse}
+      >
+        {loading ? "Generando..." : <GraphicEqSharpIcon />}
+      </Button>
     </div>
   );
 }
