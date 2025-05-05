@@ -11,7 +11,7 @@ function InputReq({ className, findContext, type = "text", onSend, ...props }) {
   const [input, setInput] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const inputRef = React.useRef(null);
-
+  
   const handleSendClick = async () => {
     if (input.trim() === "") return;
 
@@ -55,7 +55,7 @@ function InputReq({ className, findContext, type = "text", onSend, ...props }) {
         {...props}
       />
       <div className="flex items-center justify-end">
-        <TTS className="relative right-1 bottom-2" assistantResponse={findContext }/>
+        <TTS className="relative right-1 bottom-2" assistantResponse={findContext}/>
         <Button
           onClick={handleSendClick}
           variant="circle"

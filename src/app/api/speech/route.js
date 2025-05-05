@@ -14,11 +14,12 @@ export async function POST(req) {
     voice: 'shimmer',
     outputFormat: 'mp3',
   });
-  
-  return new NextResponse(audio.uint8Array, {
+
+  return new NextResponse(Buffer.from(audio.uint8Array), {
     headers: {
-      'Content-Type': audio.mimeType,
+      'Content-Type': audio.mimeType || 'audio/mpeg',
       'Content-Disposition': 'inline; filename="voz.mp3"',
+      'Content-Length': audio.uint8Array.length.toString(),
     },
   });
 }

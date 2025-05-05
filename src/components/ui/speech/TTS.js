@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import GraphicEqSharpIcon from "@mui/icons-material/GraphicEqSharp";
 
-export default function AudioPlayer({ assistantResponse }) {
+export default function TSS({className, assistantResponse }) {
   const [loading, setLoading] = useState(false);
   const lastPlayedRef = useRef("");
   const debounceTimeout = useRef(null);
@@ -30,7 +30,7 @@ export default function AudioPlayer({ assistantResponse }) {
       setLoading(false);
     }
   };
-  /*
+
   useEffect(() => {
     if (!assistantResponse || assistantResponse === lastPlayedRef.current) return;
 
@@ -44,20 +44,14 @@ export default function AudioPlayer({ assistantResponse }) {
     
     return () => clearTimeout(debounceTimeout.current);
   }, [assistantResponse]);
-*/
+
   return (
     <div className="p-4 flex justify-center">
       <button
         onClick={() => generarAudio(assistantResponse)}
         disabled={loading || !assistantResponse}
       >
-        {loading ? (
-          "Generando..."
-        ) : (
-          <Button variant="ghost">
-            <GraphicEqSharpIcon />
-          </Button>
-        )}
+        {loading ? "Generando..." : <Button variant="ghost"><GraphicEqSharpIcon /></Button>}
       </button>
     </div>
   );
