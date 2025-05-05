@@ -1,20 +1,19 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react"; // ← Agregado useRef y useEffect
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
-  
-function Home() {
+import { useEffect, useRef, useState } from "react";
+
+export default function SpeechClient() {
   const [messages, setMessages] = useState([
-    { role: "assistant", content:"" },
-    { role: "user", content: "wercome user" },
+    { role: "assistant", content: "" },
+    { role: "user", content: "welcome user" },
   ]);
   const [isTyping, setIsTyping] = useState(false);
-
-  const bottomRef = useRef(null); // ← Agregado
+  const bottomRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]); // ← Scroll automático
+  }, [messages]);
 
   async function handleSendMessage(userInput) {
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
@@ -30,7 +29,6 @@ function Home() {
       const data = await res.json();
       const fullText = data.message || "";
 
-      // Mostrar palabra por palabra
       let index = 0;
       let words = fullText.split(" ");
       let generated = "";
@@ -41,13 +39,9 @@ function Home() {
           setMessages((prev) => {
             const last = prev[prev.length - 1];
             if (last?.role === "assistant") {
-              // Actualizar último mensaje assistant
-              return [
-                ...prev.slice(0, -1),
-                { role: "assistant", content: `${generated}` },
-              ];
+              return [...prev.slice(0, -1), { role: "assistant", content: generated }];
             } else {
-              return [...prev, { role: "assistant", content: `${generated}` }];
+              return [...prev, { role: "assistant", content: generated }];
             }
           });
           index++;
@@ -55,7 +49,7 @@ function Home() {
           clearInterval(interval);
           setIsTyping(false);
         }
-      }); // tiempo entre cada palabra
+      });
     } catch (error) {
       console.error("Error al obtener respuesta:", error);
       setMessages((prev) => [
@@ -65,22 +59,24 @@ function Home() {
       setIsTyping(false);
     }
   }
-  
+
+  const lastAssistantMessage = messages.findLast((m) => m.role === "assistant");
+
   return (
-    <div className="grid h-[100vh] w-full col-span-3 ">
-      <div className="flex flex-col w-[100%] md:w-[100%] items-center p-4 overflow-y-auto-none">
-        <div className="w-full top-0 md:w-[70vw] xl:w-[40vw]">
-          {messages.map((msg, idx) => (
-            <Msg key={idx} role={msg.role} content={msg.content} />
-          ))}
-          <div ref={bottomRef} /> {/* ← Scroll final */}
+    <>
+      <div className="grid h-[100vh] w-full col-span-3">
+        <div className="flex flex-col w-full items-center p-4 overflow-y-auto">
+          <div className="w-full md:w-[70vw] xl:w-[40vw]">
+            {messages.map((msg, idx) => (
+              <Msg key={idx} role={msg.role} content={msg.content} />
+            ))}
+            <div ref={bottomRef} />
+          </div>
+        </div>
+        <div className="flex justify-center items-center p-4">
+          <InputReq onSend={handleSendMessage} />
         </div>
       </div>
-      <div className="flex justify-center items-center ">
-        <InputReq onSend={handleSendMessage} />
-      </div>
-    </div>
+    </>
   );
 }
-
-export default Home;

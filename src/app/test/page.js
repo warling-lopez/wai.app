@@ -1,29 +1,20 @@
-// app/speech-client/page.tsx o page.jsx
 "use client";
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
-import { useEffect, useRef, useState } from "react"; // ← Agregado useRef y useEffect
+import TTS from "@/components/ui/speech/TTS"
+import { useEffect, useRef, useState } from "react";
 
 export default function SpeechClient() {
-  const [loading, setLoading] = useState(false);
-
-  const funciones = () => {
-    //  funciones que deseo ejecutar
-    generarAudio();
-  };
   const [messages, setMessages] = useState([
     { role: "assistant", content: "" },
     { role: "user", content: "welcome user" },
   ]);
-  const lastAssistantMessage = messages.findLast((m) => m.role === "assistant");
-
   const [isTyping, setIsTyping] = useState(false);
-
-  const bottomRef = useRef(null); // ← Agregado
+  const bottomRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]); // ← Scroll automático
+  }, [messages]);
 
   async function handleSendMessage(userInput) {
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
@@ -39,7 +30,6 @@ export default function SpeechClient() {
       const data = await res.json();
       const fullText = data.message || "";
 
-      // Mostrar palabra por palabra
       let index = 0;
       let words = fullText.split(" ");
       let generated = "";
@@ -50,13 +40,9 @@ export default function SpeechClient() {
           setMessages((prev) => {
             const last = prev[prev.length - 1];
             if (last?.role === "assistant") {
-              // Actualizar último mensaje assistant
-              return [
-                ...prev.slice(0, -1),
-                { role: "assistant", content: `${generated}` },
-              ];
+              return [...prev.slice(0, -1), { role: "assistant", content: generated }];
             } else {
-              return [...prev, { role: "assistant", content: `${generated}` }];
+              return [...prev, { role: "assistant", content: generated }];
             }
           });
           index++;
@@ -64,7 +50,7 @@ export default function SpeechClient() {
           clearInterval(interval);
           setIsTyping(false);
         }
-      }); // tiempo entre cada palabra
+      });
     } catch (error) {
       console.error("Error al obtener respuesta:", error);
       setMessages((prev) => [
@@ -74,42 +60,24 @@ export default function SpeechClient() {
       setIsTyping(false);
     }
   }
-  const generarAudio = async () => {
-    setLoading(true);
-    if (lastAssistantMessage) {
-      const res = await fetch("/api/speech", {
-        method: "POST",
-        body: JSON.stringify({ text: `${lastAssistantMessage.content}` }),
-        headers: { "Content-Type": "application/json" },
-      });
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      audio.play();
-      setLoading(false);
-      console.log(`Audio generado y reproducido ${url}`);
-    }
-  };
+
+  const lastAssistantMessage = messages.findLast((m) => m.role === "assistant");
 
   return (
     <>
-      <div className="grid h-[100vh] w-full col-span-3 ">
-        <div className="flex flex-col w-[100%] md:w-[100%] items-center p-4 overflow-y-auto">
-          <div className="w-full top-0 md:w-[70vw] xl:w-[40vw]">
+      <div className="grid h-[100vh] w-full col-span-3">
+        <div className="flex flex-col w-full items-center p-4 overflow-y-auto">
+          <div className="w-full md:w-[70vw] xl:w-[40vw]">
             {messages.map((msg, idx) => (
               <Msg key={idx} role={msg.role} content={msg.content} />
             ))}
-            <div ref={bottomRef} /> {/* ← Scroll final */}
+            <div ref={bottomRef} />
           </div>
         </div>
         <div className="flex justify-center items-center p-4">
           <InputReq onSend={handleSendMessage} />
+          <TTS assistantResponse={lastAssistantMessage?.content} />
         </div>
-      </div>
-      <div>
-        <button onClick={funciones} disabled={loading}>
-          {loading ? "Generando..." : "Reproducir voz"}
-        </button>
       </div>
     </>
   );

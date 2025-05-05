@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils"; // o usa clsx si no tienes cn
 import ReactMarkdown from "react-markdown";
 
-const Msg = ({ role = "user", content = "" }) => {
+const Msg = ({ role , content }) => {
   const isUser = role === "user";
 
   return (

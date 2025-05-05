@@ -2,22 +2,28 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
-import { PaperPlaneIcon } from "@radix-ui/react-icons";
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 
 function InputReq({ className, type = "text", onSend, ...props }) {
   const [input, setInput] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
   const inputRef = React.useRef(null);
 
-  const handleSendClick = () => {
-    if (input.trim() !== "") {
-      onSend(input);
+  const handleSendClick = async () => {
+    if (input.trim() === "") return;
+
+    setIsLoading(true);
+    try {
+      await onSend(input); // asegúrate de que `onSend` sea async
       setInput("");
 
-      // Resetear altura después de enviar
       const el = inputRef.current;
       if (el) {
         el.style.height = "60px";
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -28,8 +34,8 @@ function InputReq({ className, type = "text", onSend, ...props }) {
         value={input}
         onChange={(e) => {
           setInput(e.target.value);
-          e.target.style.height = "60px"; // Resetear altur
-          e.target.style.height = e.target.scrollHeight + "px"; // Autoexpandir
+          e.target.style.height = "60px";
+          e.target.style.height = e.target.scrollHeight + "px";
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -43,14 +49,21 @@ function InputReq({ className, type = "text", onSend, ...props }) {
           className
         )}
         rows={1}
+        disabled={isLoading}
         {...props}
       />
-      <div className="w-full flex justify-end">
+      <div className="flex justify-end">
         <Button
           onClick={handleSendClick}
-          className="rounded-full relative right-2 bottom-2"
+          variant="circle"
+          disabled={isLoading}
+          className="relative right-1 bottom-2"
         >
-          <PaperPlaneIcon />
+          {isLoading ? (
+            <StopIcon className="animate-spin cursor-not-allowed" />
+          ) : (
+            <PlayArrowIcon />
+          )}
         </Button>
       </div>
     </div>
