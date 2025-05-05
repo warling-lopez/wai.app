@@ -1,21 +1,17 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import GraphicEqSharpIcon from "@mui/icons-material/GraphicEqSharp";
-
-export default function TSS({className, assistantResponse }) {
+import { useEffect, useState } from "react";
+import {Button} from "@/components/ui/button"
+import GraphicEqSharpIcon from '@mui/icons-material/GraphicEqSharp';
+export default function TSS({ assistantResponse }) {
   const [loading, setLoading] = useState(false);
-  const lastPlayedRef = useRef("");
-  const debounceTimeout = useRef(null);
 
-  const generarAudio = async (text) => {
-    if (!text || text === lastPlayedRef.current) return;
-
+  const generarAudio = async () => {
+    if (!assistantResponse) return;
     setLoading(true);
     try {
       const res = await fetch("/api/speech", {
         method: "POST",
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text: assistantResponse }),
         headers: { "Content-Type": "application/json" },
       });
       const blob = await res.blob();
@@ -23,7 +19,6 @@ export default function TSS({className, assistantResponse }) {
       const audio = new Audio(url);
       audio.play();
       console.log(`Audio generado y reproducido: ${url}`);
-      lastPlayedRef.current = text;
     } catch (error) {
       console.error("Error generando el audio:", error);
     } finally {
@@ -31,27 +26,19 @@ export default function TSS({className, assistantResponse }) {
     }
   };
 
+  // Descomenta esto si quieres que se reproduzca automáticamente al cambiar el mensaje
+  /*
   useEffect(() => {
-    if (!assistantResponse || assistantResponse === lastPlayedRef.current) return;
-
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
+    if (assistantResponse) {
+      generarAudio();
     }
-
-    debounceTimeout.current = setTimeout(() => {
-      generarAudio(assistantResponse);
-    }, 300); // espera 300ms antes de ejecutar (ajustable)
-    
-    return () => clearTimeout(debounceTimeout.current);
   }, [assistantResponse]);
+  */
 
   return (
     <div className="p-4 flex justify-center">
-      <button
-        onClick={() => generarAudio(assistantResponse)}
-        disabled={loading || !assistantResponse}
-      >
-        {loading ? "Generando..." : <Button variant="ghost"><GraphicEqSharpIcon /></Button>}
+      <button onClick={generarAudio} disabled={loading || !assistantResponse}>
+        {loading ? "Generando..." : (<Button variant="ghost"><GraphicEqSharpIcon/></Button>)}
       </button>
     </div>
   );
