@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Calendar, Home,IdCard, Inbox, Search, Settings } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,7 +12,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Switch } from "@/components/ui/switch"
-
 import { useState } from "react";
 
 export function AppSidebar() {
@@ -23,6 +22,7 @@ export function AppSidebar() {
 
   const items = [
     { title: "Home", url: "/", icon: Home },
+    { title: "Login", url: "/log", icon: IdCard },
     { title: "Pruevas", url: "/test", icon: Inbox },
     { title: "Calendar", url: "#", icon: Calendar },
     { title: "Search", url: "#", icon: Search },
