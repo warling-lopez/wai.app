@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import WallyLogo from "@/assets/img/Wally.png"
+import Image from 'next/image'
+
+
 export default function SignIn(props) {
   const { className, ...rest } = props;
 
@@ -89,16 +91,16 @@ export default function SignIn(props) {
           </form>
           <div className="relative hidden bg-muted md:block">
             <img
-              src={WallyLogo}
+              src="/Wally.png"
               alt="Images"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+              className="absolute inset-0 h-full w-full object-cover dark:grayscale animationForIAWallyImg"
             />
           </div>
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        Deseas aceptar términos y condiciones <a href="#">Términos y Servicios</a>
+        y <a href="#">Políticas de Privacidad</a>.
       </div>
     </div>
   );
