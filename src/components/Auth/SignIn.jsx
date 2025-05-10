@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-export default function SignIn(props) {
+import Image from "next/image";
+function SignIn(props) {
   const { className, ...rest } = props;
 
   return (
@@ -88,10 +88,13 @@ export default function SignIn(props) {
             </div>
           </form>
           <div className="relative hidden bg-muted md:block">
-            <img
+            <Image
+              width="500"
+              height="500"
               src="/Wally.png"
               alt="Images"
-              className="absolute inset-0 h-full w-full object-cover dark:grayscale animationForIAWallyImg"
+              priority
+              className="absolute inset-0 h-full w-full dark:grayscale animationForIAWallyImg"
             />
           </div>
         </CardContent>
@@ -103,3 +106,5 @@ export default function SignIn(props) {
     </div>
   );
 }
+
+export default SignIn;
