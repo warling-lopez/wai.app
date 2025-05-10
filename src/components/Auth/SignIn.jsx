@@ -1,29 +1,47 @@
 // src/components/Auth/SignIn.js
 "use client";
+import {Supabase} from "../../supabase/supabase"
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { useState } from "react";
 function SignIn(props) {
   const { className, ...rest } = props;
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleSubmit = async (e)=>{
+    e.preventDefault();
+    try {
+      const re = await Supabase.auth.signInWithOtp({
+        email,
+      })
+      console.log(re)
+      console.log(e.target.value)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-8 md:p-10">
+          <form className="p-8 md:p-10" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-8">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Bienvenido a WALLY</h1>
                 <p className="text-balance text-muted-foreground">
-                Inicie sesión en su cuenta de Wally Inc
+                  Inicie sesión en su cuenta de Wally Inc
                 </p>
               </div>
               <div className="grid gap-5">
                 <Label htmlFor="email">Email</Label>
                 <Input
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                   id="email"
                   type="email"
                   placeholder="m@example.com"
@@ -40,7 +58,14 @@ function SignIn(props) {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  id="password"
+                  type="password"
+                  required
+                />
               </div>
               <Button type="submit" className="w-full">
                 Login
@@ -100,8 +125,9 @@ function SignIn(props) {
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-        Deseas aceptar términos y condiciones <a href="#">Términos y Servicios</a>
-        y <a href="#">Políticas de Privacidad</a>.
+        Deseas aceptar términos y condiciones{" "}
+        <a href="#">Términos y Servicios</a>y{" "}
+        <a href="#">Políticas de Privacidad</a>.
       </div>
     </div>
   );
