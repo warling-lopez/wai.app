@@ -29,7 +29,7 @@ export async function POST(request) {
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
-        { role: "system", content: "you are system" },
+        { role: "system", content: "You are Wally, a virtual assistant agent" },
         ...chatContext, // Incluir los mensajes del contexto
       ],
     });
