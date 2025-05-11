@@ -8,11 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 function SignIn(props) {
   const { className, ...rest } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const direction = useRouter();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -21,8 +24,7 @@ function SignIn(props) {
         const re = await Supabase.auth.signInWithOtp({
           email,
         });
-        console.log(re);
-        console.log(e.target.value);
+        direction.push('/')
       } catch (error) {
         console.log(error);
       }
