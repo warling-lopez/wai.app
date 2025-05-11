@@ -22,7 +22,7 @@ export function AppSidebar() {
 
   const items = [
     { title: "Home", url: "/", icon: Home },
-    { title: "Login", url: "/log", icon: IdCard },
+    { title: "Login", url: "/log/signup", icon: IdCard },
     { title: "Pruevas", url: "/test", icon: Inbox },
     { title: "Calendar", url: "#", icon: Calendar },
     { title: "Search", url: "#", icon: Search },

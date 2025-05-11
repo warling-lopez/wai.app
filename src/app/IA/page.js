@@ -8,10 +8,6 @@ export default function SpeechClient() {
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef(null);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   async function handleSendMessage(userInput) {
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
     setIsTyping(true);
@@ -36,7 +32,10 @@ export default function SpeechClient() {
           setMessages((prev) => {
             const last = prev[prev.length - 1];
             if (last?.role === "assistant") {
-              return [...prev.slice(0, -1), { role: "assistant", content: generated }];
+              return [
+                ...prev.slice(0, -1),
+                { role: "assistant", content: generated },
+              ];
             } else {
               return [...prev, { role: "assistant", content: generated }];
             }
@@ -55,19 +54,39 @@ export default function SpeechClient() {
       ]);
       setIsTyping(false);
     }
+    guardarEnBD;
   }
+  const papa = {
+    menssages: [
+      { role: "user", content: "Hola" },
+      { role: "assistant", content: "¡Hola! ¿Cómo va todo?" },
+    ],
+  };
+  const guardarEnBD = async () => {
+    const fullMessage = { papa };
+    // Guardar en Supabase
+    const { error: dbError } = await supabase
+      .from("chat_context")
+      .insert([{ data: fullMessage }]);
 
+    if (dbError) {
+      console.error("Error guardando en Supabase:", dbError);
+    }
+  };
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 
     // Guardar la última respuesta del asistente en sessionStorage solo en cliente
     const lastAssistantMessage = messages
-      .slice()  // Copiar el array para evitar mutaciones
-      .reverse()  // Invertir el orden
-      .find((m) => m.role === "assistant");  // Buscar el primer mensaje con el rol de "assistant"
-    
+      .slice() // Copiar el array para evitar mutaciones
+      .reverse() // Invertir el orden
+      .find((m) => m.role === "assistant"); // Buscar el primer mensaje con el rol de "assistant"
+
     if (lastAssistantMessage && typeof window !== "undefined") {
-      sessionStorage.setItem("Respuesta del modelo", JSON.stringify(lastAssistantMessage.content));
+      sessionStorage.setItem(
+        "Respuesta del modelo",
+        JSON.stringify(lastAssistantMessage.content)
+      );
     }
   }, [messages]);
 

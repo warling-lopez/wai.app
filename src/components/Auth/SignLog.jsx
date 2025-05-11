@@ -8,24 +8,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { useState } from "react";
-function SignIn(props) {
+
+function SignUp(props) {
+
   const { className, ...rest } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) => {//esta funciones es para mandar los registros del user
     e.preventDefault();
-    if (password !== confirmPassword) {
-    } else {
-      try {
-        const re = await Supabase.auth.signInWithOtp({
-          email,
-        });
-        console.log(re);
-        console.log(e.target.value);
-      } catch (error) {
-        console.log(error);
-      }
+
+    try {
+      const re = await Supabase.auth.signInWithOtp({
+        email,
+      });
+      console.log(re);
+      console.log(e.target.value);
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -39,18 +39,6 @@ function SignIn(props) {
                 <p className="text-balance text-muted-foreground">
                   Inicie sesión en su cuenta de Wally Inc
                 </p>
-              </div>
-              <div className="grid gap-5">
-                <Label htmlFor="email">Name</Label>
-                <Input
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  id="Name"
-                  type="text"
-                  placeholder="Jose"
-                  required
-                />
               </div>
               <div className="grid gap-5">
                 <Label htmlFor="email">Email</Label>
@@ -67,6 +55,12 @@ function SignIn(props) {
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
+                  <a
+                    href="#"
+                    className="ml-auto text-sm underline-offset-2 hover:underline"
+                  >
+                    Forgot your password?
+                  </a>
                 </div>
                 <Input
                   onChange={(e) => {
@@ -77,21 +71,8 @@ function SignIn(props) {
                   required
                 />
               </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Confirm your password</Label>
-                </div>
-                <Input
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value);
-                  }}
-                  id="password"
-                  type="password"
-                  required
-                />
-              </div>
               <Button type="submit" className="w-full">
-                LogUp
+                Login
               </Button>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
@@ -129,20 +110,20 @@ function SignIn(props) {
               </div>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <a href="#" className="underline underline-offset-4">
+                <a href="/log/signin" className="underline underline-offset-4">
                   Sign In
                 </a>
               </div>
             </div>
           </form>
-          <div className="relative w-full h-full hidden bg-muted md:block">
+          <div className="relative hidden bg-muted md:block">
             <Image
-              width="300"
-              height="300"
+              width="500"
+              height="500"
               src="/Wally.png"
               alt="Images"
               priority
-              className="absolute inset-0 dark:grayscale animationForIAWallyImg"
+              className="absolute inset-0 h-full w-full dark:grayscale animationForIAWallyImg"
             />
           </div>
         </CardContent>
@@ -156,4 +137,4 @@ function SignIn(props) {
   );
 }
 
-export default SignIn;
+export default SignUp;
