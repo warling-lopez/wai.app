@@ -7,7 +7,7 @@ const openai = new OpenAI({
 });
 
 // Establecer el tamaño máximo de contexto que deseas mantener
-const MAX_CONTEXT_LENGTH = 10;
+const MAX_CONTEXT_LENGTH = 30;
 
 // Variable para almacenar el contexto (esto se pierde cada vez que reinicias el servidor)
 let chatContext = [];
