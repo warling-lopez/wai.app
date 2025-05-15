@@ -14,7 +14,7 @@ export default function ProfilePage() {
     router.replace("/IA");
   };
   useEffect(() => {
-    router.replace(`/IA`);
+    AI
   }, []);
 
   if (!userData) return <p>Cargando perfil…</p>;

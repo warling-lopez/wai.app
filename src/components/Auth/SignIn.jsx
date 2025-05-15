@@ -16,13 +16,6 @@ function SignUp(props) {
   const [password, setPassword] = useState("");
   const direction = useRouter();
 
-  useEffect(() => {
-    Supabase.auth.onAuthStateChange((event, session) => {
-      
-    });
-    
-  }, []);
-
   const handleSubmitWithGoogle = async (e) => {
     await Supabase.auth.signInWithOAuth({
       provider: "google",
