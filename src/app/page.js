@@ -2,19 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Supabase } from "@/supabase/supabase";
 import { Button } from "@/components/ui/button";
 
 export default function ProfilePage() {
   // 🎯 Aquí usamos useParams en vez de router.query
-  const { uid } = useParams();
   const router = useRouter();
   const [userData, setUserData] = useState(null);
   const AI = () => {
-    router.replace("/IA");
+    router.replace("https://wai-app.vercel.app/IA");
   };
   useEffect(() => {
-    AI
+    AI;
   }, []);
 
   if (!userData) return <p>Cargando perfil…</p>;
