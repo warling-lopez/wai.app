@@ -12,7 +12,7 @@ export default function ProfilePage() {
     router.replace("https://wai-app.vercel.app/IA");
   };
   useEffect(() => {
-    AI;
+    AI();
   }, []);
 
   if (!userData) return <p>Cargando perfil…</p>;
