@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import TTS from "@/components/ui/speech/TTS";
+import STT from "@/components/ui/speech/STT";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 
@@ -12,33 +13,24 @@ function InputReq({ className, type = "text", onSend, ...props }) {
   const [resModelo, setResModelo] = React.useState("");
   const inputRef = React.useRef(null);
 
-  // 🧠 Escuchar cambios en sessionStorage cada 500ms
+  // Escuchar sessionStorage para TTS
   React.useEffect(() => {
     const interval = setInterval(() => {
-      const nuevaRespuesta = sessionStorage.getItem("Respuesta del modelo") || "";
-      setResModelo((prev) => {
-        return prev !== nuevaRespuesta ? nuevaRespuesta : prev;
-      });
-    }, 500); // Ajusta el intervalo si lo necesitas
-
-    return () => clearInterval(interval); // limpieza
+      const nuevaRespuesta =
+        sessionStorage.getItem("Respuesta del modelo") || "";
+      setResModelo((prev) => (prev !== nuevaRespuesta ? nuevaRespuesta : prev));
+    }, 500);
+    return () => clearInterval(interval);
   }, []);
-  
-  const handleSendClick = async () => {
-    if (input.trim() === "") return;
 
+  const handleSendClick = async (userInput = input) => {
+    if (!userInput.trim()) return;
     setIsLoading(true);
-    try {
-      await onSend(input);
-      setInput("");
+    setInput("");
+    inputRef.current && (inputRef.current.style.height = "60px");
 
-      const el = inputRef.current;
-      if (el) {
-        el.style.height = "60px";
-      }
-    } finally {
-      setIsLoading(false);
-    }
+    await onSend(userInput);
+    setIsLoading(false);
   };
 
   return (
@@ -66,20 +58,24 @@ function InputReq({ className, type = "text", onSend, ...props }) {
         disabled={isLoading}
         {...props}
       />
-      <div className="flex justify-end">
+      {/*integraciones con la iA*/}
+      <div className="flex justify-end py-2 space-x-2">
         <TTS assistantResponse={resModelo} />
-        <Button
-          onClick={handleSendClick}
-          variant="circle"
-          disabled={isLoading}
-          className="relative right-1 bottom-2"
-        >
-          {isLoading ? (
-            <StopIcon className="animate-spin cursor-not-allowed" />
-          ) : (
-            <PlayArrowIcon />
-          )}
-        </Button>
+        {/* STT envía directamente la transcripción a onSend */}
+        <STT onTranscribe={handleSendClick} />
+        <div>
+          <Button
+            onClick={() => handleSendClick()}
+            variant="ghost"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <StopIcon className="animate-spin" />
+            ) : (
+              <PlayArrowIcon />
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   );

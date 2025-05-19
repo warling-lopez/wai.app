@@ -48,7 +48,7 @@ export default function TSS({ className, assistantResponse }) {
       <Button
         variant="ghost"
         onClick={generarAudio}
-        className="relative right-1 bottom-2"
+        className="flex justify-center align-center"
         disabled={loading || !assistantResponse}
       >
         {loading ? "Generando..." : <GraphicEqSharpIcon />}
