@@ -150,3 +150,12 @@ function SignUp(props) {
 }
 
 export default SignUp;
+/*
+controlador (controller)
+const User = require('../models/User');
+
+const getUser = async (req, res) => {
+  const user = await User.findById(req.params.id); // aquí accede al modelo
+  res.json(user); // responde al cliente
+}; 
+*/
