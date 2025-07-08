@@ -4,7 +4,7 @@ import { Supabase } from "@/supabase/supabase";
 function ImageUser() {
   const [avatar, setAvatar] = useState(null);
   const [correo, setCorreo] = useState(null);
-
+/*
   useEffect(() => {
     const obtenerPerfil = async () => {
       try {
@@ -61,7 +61,7 @@ function ImageUser() {
 
     obtenerPerfil();
   }, []);
-
+*/
   if (!avatar || !correo) return <div>Cargando perfil...</div>;
 
   return (

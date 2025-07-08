@@ -3,12 +3,12 @@
 
 import { useEffect } from "react";
 import { Supabase } from "@/supabase/supabase";
-import { useUserStore } from "@/store/useUserStore";
+//import { useUserStore } from "@/store/useUserStore";
 import "./globals.css"
 export default function RootLayout({ children }) {
-  const setUser = useUserStore(state => state.setUser);
+ // const setUser = useUserStore(state => state.setUser);
 
-  useEffect(() => {
+  /*useEffect(() => {
     const cargarUsuario = async () => {
       const {
         data: { user },
@@ -41,12 +41,11 @@ export default function RootLayout({ children }) {
     };
 
     cargarUsuario();
-  }, [setUser]);
+  }, [setUser]);*/
 
   return (
     <html>
       <body>{children}
-        <div>hola {setUser}</div>
       </body>
     </html>
   );

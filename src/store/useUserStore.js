@@ -1,4 +1,5 @@
 // src/store/useUserStore.js
+/*
 import { create } from 'zustand';
 
 export const useUserStore = create((set) => ({
@@ -7,3 +8,4 @@ export const useUserStore = create((set) => ({
   clearUser: () => set({ user: null }),
 }));
 
+*/

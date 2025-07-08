@@ -92,7 +92,7 @@ export default function SpeechClient() {
 
   return (
     <>
-      <div className="grid h-[100vh] w-full col-span-3">
+      <div className="grid h-[90vh] w-full col-span-3">
         <div className="flex flex-col w-full items-center p-4 overflow-y-auto">
           <div className="w-full md:w-[70vw] xl:w-[40vw]">
             {messages.map((msg, idx) => (
@@ -101,9 +101,10 @@ export default function SpeechClient() {
             <div ref={bottomRef} />
           </div>
         </div>
-        <div className="flex justify-center items-center p-4">
+        <div className="flex justify-center items-center p-1 ">
           <InputReq onSend={handleSendMessage} />
         </div>
+        
       </div>
     </>
   );
