@@ -20,8 +20,8 @@ export default function ProfilePage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold">¡Hola, {userData.username}!</h1>
-      <p className="mt-2">Email: {userData.email}</p>
+      <h1 className="text-2xl font-bold">¡Hola, {/*userData.username*/}!</h1>
+      <p className="mt-2">Email: {/*userData.email*/}</p>
       {/* resto de tu UI */}
       <Button onClick={AI}>Entrar a la IA</Button>
     </div>
