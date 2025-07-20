@@ -46,7 +46,7 @@ function SignIn(props) {
         password,
         options: {
           data: { username: name },
-          redirectTo: `https://wai-app.vercel.app/IA`,
+          redirectTo: `/IA`,
         },
       });
       if (error) throw error;
