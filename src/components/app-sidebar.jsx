@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import ImageUser from "@/components/ui/DashboardUSer/ImageUser"
+import ImageUser from "@/components/ui/DashboardUSer/ImageUser";
 import { Switch } from "@/components/ui/switch"
 import { useState } from "react";
 
@@ -40,9 +40,9 @@ export function AppSidebar() {
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel>WALLY MENU</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <ImageUser/>
+            <SidebarGroupContent className={"flex justify-between flex-wrap"}>
+              <SidebarMenu className={"flex flex-col gap-2"}>
+                
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
@@ -59,6 +59,7 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
+              <ImageUser />
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
