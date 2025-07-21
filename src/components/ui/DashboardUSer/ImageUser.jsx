@@ -5,7 +5,9 @@ function ImageUser() {
   const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
-    const tokenString = localStorage.getItem("sb-hrgajcbtdlljpcwvenmf-auth-token");
+    const tokenString = localStorage.getItem(
+      "sb-hrgajcbtdlljpcwvenmf-auth-token"
+    );
     if (tokenString) {
       try {
         const parsed = JSON.parse(tokenString);
@@ -22,16 +24,21 @@ function ImageUser() {
     }
   }, []);
 
-  if (!userData) return <div>Cargando perfil...</div>;
+  if (!userData)
+    return (
+      <div>
+        <a href="/log/signUp" className="underline underline-offset-4">
+          Sign Up
+        </a>
+      </div>
+    );
 
   return (
-    <div className="flex flex-col items-center">
-      <img
-        src={avatar}
-        alt="avatar del usuario"
-        className="w-13 rounded-full"
-      />
-      <p className="mt-2 text-sm">¡Hola, {userData.user.user_metadata.username}!</p>
+    <div className="flex flex-row items-center">
+      <img src={avatar} alt="avatar" className="w-13 rounded-full" />
+      <span className="mt-2 text-sm">
+        {userData.user.user_metadata.username}
+      </span>
     </div>
   );
 }
