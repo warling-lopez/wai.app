@@ -1,69 +1,72 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { BiLoaderAlt } from "react-icons/bi";
 import swal from "sweetalert2";
 
 export default function ProfilePage() {
+  
   const router = useRouter();
-  const [userData, setUserData] = useState(null);
-  const [checkedAuth, setCheckedAuth] = useState(false); // ← Para no repetir el efecto
+  const STORAGE_KEY = "sb-hrgajcbtdlljpcwvenmf-auth-token";
 
-  // Leer token del localStorage
+  const [authData, setAuthData] = useState(null);
+  const [checkedAuth, setCheckedAuth] = useState(false);
+
+  // 1️⃣ Al montar: parsear hash y guardar todo en localStorage + estado
   useEffect(() => {
-    const tokenString = localStorage.getItem(
-      "sb-hrgajcbtdlljpcwvenmf-auth-token"
-    );
-    if (tokenString) {
-      try {
-        const parsed = JSON.parse(tokenString);
-        setUserData(parsed);
-      } catch (e) {
-        console.error("Error parsing token:", e);
-        setUserData(null);
+    const hash = window.location.hash; // ej: "#access_token=...&refresh_token=..."
+    if (hash) {
+      const params = new URLSearchParams(hash.substring(1));
+      const data = {}; // <-- aquí un objeto JS común
+      for (const [key, value] of params.entries()) {
+        data[key] = value;
       }
-    } else {
-      console.error("No token found in localStorage");
-      setUserData(null);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      setAuthData(data);
+      history.replaceState(null, "", window.location.pathname);
     }
   }, []);
 
-  // Esperar 5s y verificar userData una sola vez
+  // 2️⃣ Si no vino por hash, leer de localStorage
+  useEffect(() => {
+    if (authData === null) {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          setAuthData(JSON.parse(stored));
+        } catch {
+          console.error("Error parsing stored auth data");
+        }
+      }
+    }
+  }, [authData]);
+
+  // 3️⃣ Tras 3s, mostrar alerta y redirigir UNA VEZ
   useEffect(() => {
     if (checkedAuth) return;
-
     const timer = setTimeout(() => {
-      if (userData === null) {
-        swal
-          .fire({
-            title: "No tienes una cuenta",
-            text: "Por favor, regístrate para continuar.",
-            icon: "info",
-            confirmButtonText: "Registrarse",
-          })
-          .then(() => {
-            router.push("/log/signup");
-          });
+      if (!authData) {
+        swal.fire({
+          title: "No tienes una cuenta",
+          text: "Por favor, regístrate para continuar.",
+          icon: "info",
+          confirmButtonText: "Registrarse",
+        }).then(() => router.push("/log/signup"));
       } else {
-        swal
-          .fire({
-            title: "Bienvenido de nuevo",
-            text: "Estamos felices de verte otra vez.",
-            icon: "success",
-            confirmButtonText: "Continuar",
-          })
-          .then(() => {
-            router.push("/IA");
-          });
+        swal.fire({
+          title: "Bienvenido de nuevo",
+          text: "Estamos felices de verte otra vez.",
+          icon: "success",
+          confirmButtonText: "Continuar",
+        }).then(() => {
+          setTimeout(() => router.push("/IA"), 5000);
+        });
       }
-
-      setCheckedAuth(true); // Marcar como ejecutado
-    }, 5000);
-
+      setCheckedAuth(true);
+    }, 3000);
     return () => clearTimeout(timer);
-  }, [userData, checkedAuth]);
+  }, [authData, checkedAuth, router]);
 
   return (
     <div className="flex w-[100vw] h-[95vh] items-center justify-center">
