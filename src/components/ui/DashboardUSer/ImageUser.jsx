@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { Button } from "../button";
+import { useRouter } from "next/navigation";
 
 function ImageUser() {
+  const router = useRouter();
   const [userData, setUserData] = useState(null);
   const [avatar, setAvatar] = useState("");
 
@@ -27,16 +30,16 @@ function ImageUser() {
   if (!userData)
     return (
       <div>
-        <a href="/log/signUp" className="underline underline-offset-4">
+        <Button variant="primary" onClick={() => router.push("/log/signup")}>
           Sign Up
-        </a>
+        </Button>
       </div>
     );
 
   return (
-    <div className="flex flex-row items-center">
-      <img src={avatar} alt="avatar" className="w-13 rounded-full" />
-      <span className="mt-2 text-sm">
+    <div className="flex flex-row items-center justify-evenly w-full">
+      <img src={avatar} alt="avatar" className="w-10 rounded-full" />
+      <span className="mt-2 text-xl">
         {userData.user.user_metadata.username}
       </span>
     </div>

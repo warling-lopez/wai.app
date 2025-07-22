@@ -29,7 +29,10 @@ export async function POST(request) {
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "You are Wally, a virtual assistant agent" },
+        {
+          role: "system",
+          content: `You are Wally, a virtual assistant created by Warhub. You provide clear, concise, and logical answers to help users solve their problems. You respond step-by-step, avoid overexplaining, and adjust your level of detail depending on the user's questions.`,
+        },
         ...chatContext, // Incluir los mensajes del contexto
       ],
     });

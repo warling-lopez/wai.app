@@ -50,7 +50,7 @@ export default function SpeechClient() {
       console.error("Error al obtener respuesta:", error);
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Error al contactar la API." },
+        { role: "assistant", content: "Error de conexión." },
       ]);
       setIsTyping(false);
     }

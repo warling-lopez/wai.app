@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Home,IdCard, Inbox, Search, Settings } from "lucide-react";
+import { Calendar, Home, IdCard, Inbox, Search, Settings } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,10 +12,15 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import ImageUser from "@/components/ui/DashboardUSer/ImageUser";
-import { Switch } from "@/components/ui/switch"
+import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export function AppSidebar() {
+    const router = useRouter();
+
   const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState("General");
 
@@ -33,6 +38,27 @@ export function AppSidebar() {
       action: () => setShowSettings(true),
     },
   ];
+  const saveLoader = () => {
+    Swal.fire({
+      title: "Estas seguro?",
+      text: "Tu cuenta cerrará sesión de inmediato en este navegador!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, cerrar sesión!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+        });
+        localStorage.clear()
+        router.push("/IA");
+      }
+    });
+  };
 
   return (
     <>
@@ -42,14 +68,13 @@ export function AppSidebar() {
             <SidebarGroupLabel>WALLY MENU</SidebarGroupLabel>
             <SidebarGroupContent className={"flex justify-between flex-wrap"}>
               <SidebarMenu className={"flex flex-col gap-2"}>
-                
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
                       <button
                         onClick={() =>
-                          item.action ? item.action() : (window.location.href = item.url)
-                        }
+                          item.action ? item.action() : router.push(item.url)
+                        } 
                         className="flex items-center gap-2"
                       >
                         <item.icon />
@@ -74,7 +99,9 @@ export function AppSidebar() {
                 <button
                   key={tab}
                   className={`w-full text-left px-3 py-2 rounded-md font-medium ${
-                    activeTab === tab ? "bg-blue-100 text-blue-600" : "hover:bg-gray-200"
+                    activeTab === tab
+                      ? "bg-blue-100 text-blue-600"
+                      : "hover:bg-gray-200"
                   }`}
                   onClick={() => setActiveTab(tab)}
                 >
@@ -94,8 +121,10 @@ export function AppSidebar() {
 
               {activeTab === "General" && (
                 <div>
-                  <h2 className="text-xl font-bold mb-4">Configuración General</h2>
-                  <Switch/>
+                  <h2 className="text-xl font-bold mb-4">
+                    Configuración General
+                  </h2>
+                  <Switch />
                 </div>
               )}
               {activeTab === "Apariencia" && (
@@ -106,8 +135,13 @@ export function AppSidebar() {
               )}
               {activeTab === "Avanzado" && (
                 <div>
-                  <h2 className="text-xl font-bold mb-4">Configuración Avanzada</h2>
+                  <h2 className="text-xl font-bold mb-4">
+                    Configuración Avanzada
+                  </h2>
                   <p>Parámetros del modelo, tokens, temperatura, etc.</p>
+                  <Button variant="destructive" onClick={saveLoader}>
+                    Log out
+                  </Button>
                 </div>
               )}
             </div>
