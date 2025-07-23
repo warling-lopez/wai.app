@@ -25,7 +25,7 @@ export default function ProfilePage() {
         console.error("Error al obtener usuario:", error);
         return null;
       }
-
+      console.log('Usuario:', user)
       return user;
     };
     getUserInfo();
