@@ -1,14 +1,14 @@
 "use client";
+
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
 import { useEffect, useRef, useState } from "react";
+import { Supabase } from "@/Supabase/Supabase"; // <-- Importar supabase
+
 export default function SpeechClient() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef(null);
-
-  
-  
 
   async function handleSendMessage(userInput) {
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
@@ -46,8 +46,9 @@ export default function SpeechClient() {
         } else {
           clearInterval(interval);
           setIsTyping(false);
+          guardarEnBD(); // <-- llamar aquí, una vez finalizado el texto
         }
-      });
+      }, 100); // intervalo 100 ms
     } catch (error) {
       console.error("Error al obtener respuesta:", error);
       setMessages((prev) => [
@@ -56,33 +57,33 @@ export default function SpeechClient() {
       ]);
       setIsTyping(false);
     }
-    guardarEnBD;
   }
+
   const papa = {
     menssages: [
       { role: "user", content: "Hola" },
       { role: "assistant", content: "¡Hola! ¿Cómo va todo?" },
     ],
   };
+
   const guardarEnBD = async () => {
-    const fullMessage = { papa };
-    // Guardar en Supabase
-    const { error: dbError } = await supabase
-      .from("chat_context")
-      .insert([{ data: fullMessage }]);
+    // Guardar los mensajes en Supabase, aquí ajusta según la estructura que quieres
+    const { error: dbError } = await Supabase.from("chat_context").insert([
+      { data: papa.menssages },
+    ]);
 
     if (dbError) {
       console.error("Error guardando en Supabase:", dbError);
     }
   };
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 
-    // Guardar la última respuesta del asistente en sessionStorage solo en cliente
     const lastAssistantMessage = messages
-      .slice() // Copiar el array para evitar mutaciones
-      .reverse() // Invertir el orden
-      .find((m) => m.role === "assistant"); // Buscar el primer mensaje con el rol de "assistant"
+      .slice()
+      .reverse()
+      .find((m) => m.role === "assistant");
 
     if (lastAssistantMessage && typeof window !== "undefined") {
       sessionStorage.setItem(

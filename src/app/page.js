@@ -3,12 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiLoaderAlt } from "react-icons/bi";
-import { Supabase } from "@/supabase/supabase";
+import { Supabase } from "@/Supabase/Supabase";
 
 import swal from "sweetalert2";
 
 export default function ProfilePage() {
-  
   const router = useRouter();
   const STORAGE_KEY = "sb-hrgajcbtdlljpcwvenmf-auth-token";
 
@@ -17,19 +16,18 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const getUserInfo = async () => {
-    const {
-      data: { user },
-      error,
-    } = await Supabase.auth.getUser();
+      const {
+        data: { user },
+        error,
+      } = await Supabase.auth.getUser();
 
-    if (error) {
-      console.error("Error al obtener usuario:", error);
-      return null;
-    }
+      if (error) {
+        console.error("Error al obtener usuario:", error);
+        return null;
+      }
 
-    console.log("Usuario:", user);
-    return user;
-  };
+      return user;
+    };
     getUserInfo();
   }, []);
 
@@ -67,21 +65,25 @@ export default function ProfilePage() {
     if (checkedAuth) return;
     const timer = setTimeout(() => {
       if (!authData) {
-        swal.fire({
-          title: "No tienes una cuenta",
-          text: "Por favor, regístrate para continuar.",
-          icon: "info",
-          confirmButtonText: "Registrarse",
-        }).then(() => router.push("/log/signup"));
+        swal
+          .fire({
+            title: "No tienes una cuenta",
+            text: "Por favor, regístrate para continuar.",
+            icon: "info",
+            confirmButtonText: "Registrarse",
+          })
+          .then(() => router.push("/log/signup"));
       } else {
-        swal.fire({
-          title: "Bienvenido de nuevo",
-          text: "Estamos felices de verte otra vez.",
-          icon: "success",
-          confirmButtonText: "Continuar",
-        }).then(() => {
-          setTimeout(() => router.push("/IA"), 500);
-        });
+        swal
+          .fire({
+            title: "Bienvenido de nuevo",
+            text: "Estamos felices de verte otra vez.",
+            icon: "success",
+            confirmButtonText: "Continuar",
+          })
+          .then(() => {
+            setTimeout(() => router.push("/IA"), 500);
+          });
       }
       setCheckedAuth(true);
     }, 500);

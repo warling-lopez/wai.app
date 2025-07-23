@@ -1,6 +1,6 @@
 // src/components/Auth/SignIn.js
 "use client";
-import { Supabase } from "@/supabase/supabase";
+import { Supabase } from "@/Supabase/Supabase";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -41,7 +41,6 @@ function SignIn(props) {
     try {
       // Ahora registramos al usuario en lugar de iniciar sesión
       const { data, error } = await Supabase.auth.signUp({
-
         email,
         password,
         options: {
