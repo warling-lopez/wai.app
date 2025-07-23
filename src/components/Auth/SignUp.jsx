@@ -9,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Error from "next/error";
 function SignIn(props) {
   const { className, ...rest } = props;
   const [name, setName] = useState("");
