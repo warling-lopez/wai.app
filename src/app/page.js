@@ -20,20 +20,12 @@ export default function ProfilePage() {
         data: { user },
         error,
       } = await Supabase.auth.getUser();
-      const JWT = localStorage.getItem(STORAGE_KEY);
-      if (!JWT) {
-        console.error("No JWT found in localStorage");
-        return null;
-      }else{
-        localStorage.setItem(STORAGE_KEY, JWT);
-        console.log("JWT found in localStorage:", JWT);
-      }
+
       if (error) {
         console.error("Error al obtener usuario:", error);
         return null;
       }
-      
-      console.log('Usuario:', user)
+
       return user;
     };
     getUserInfo();
