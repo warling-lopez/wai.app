@@ -12,6 +12,7 @@ export default function ProfilePage() {
   const STORAGE_KEY = "sb-hrgajcbtdlljpcwvenmf-auth-token";
 
   const [authData, setAuthData] = useState(null);
+  
   const [checkedAuth, setCheckedAuth] = useState(false);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function ProfilePage() {
         console.error("Error al obtener usuario:", error);
         return null;
       }
-      sessionStorage.setItem('Usuario', JSON.stringify(user));
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(user));
       return user;
     };
     getUserInfo();
@@ -46,7 +47,7 @@ export default function ProfilePage() {
     }
   }, []);
 
-  // 2️⃣ Si no vino por hash, leer de localStorage
+  // 2️⃣ Si no vino por hash, leer de sessionStorage
   useEffect(() => {
     if (authData === null) {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -67,7 +68,7 @@ export default function ProfilePage() {
       if (!authData) {
         swal
           .fire({
-            title: "No tienes una cuenta",
+            title: "No tienes una cuenta!",
             text: "Por favor, regístrate para continuar.",
             icon: "info",
             confirmButtonText: "Registrarse",
