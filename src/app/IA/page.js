@@ -59,23 +59,6 @@ export default function SpeechClient() {
     }
   }
 
-  const papa = {
-    menssages: [
-      { role: "user", content: "Hola" },
-      { role: "assistant", content: "¡Hola! ¿Cómo va todo?" },
-    ],
-  };
-
-  const guardarEnBD = async () => {
-    // Guardar los mensajes en Supabase, aquí ajusta según la estructura que quieres
-    const { error: dbError } = await Supabase.from("chat_context").insert([
-      { data: papa.menssages },
-    ]);
-
-    if (dbError) {
-      console.error("Error guardando en Supabase:", dbError);
-    }
-  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
