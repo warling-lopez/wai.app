@@ -41,7 +41,7 @@ function ImageUser() {
     <div className="flex flex-row items-center justify-evenly w-full">
       <img src={avatar} alt="avatar" className="w-10 rounded-full bg-slate-400" />
       <span className="mt-2 text-xl">
-        {userData.user.user_metadata.username || "Usuario Anónimo"}
+        {userData?.user?.user_metadata?.username || "Usuario Anónimo"}
       </span>
     </div>
   );

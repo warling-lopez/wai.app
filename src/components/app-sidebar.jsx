@@ -55,7 +55,7 @@ export function AppSidebar() {
           icon: "success",
         });
         localStorage.clear()
-        router.push("/IA");
+        router.refresh();
       }
     });
   };
