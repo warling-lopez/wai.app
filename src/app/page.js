@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiLoaderAlt } from "react-icons/bi";
+import { Supabase } from "@/supabase/supabase";
+
 import swal from "sweetalert2";
 
 export default function ProfilePage() {
@@ -12,6 +14,24 @@ export default function ProfilePage() {
 
   const [authData, setAuthData] = useState(null);
   const [checkedAuth, setCheckedAuth] = useState(false);
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+    const {
+      data: { user },
+      error,
+    } = await Supabase.auth.getUser();
+
+    if (error) {
+      console.error("Error al obtener usuario:", error);
+      return null;
+    }
+
+    console.log("Usuario:", user);
+    return user;
+  };
+    getUserInfo();
+  }, []);
 
   // 1️⃣ Al montar: parsear hash y guardar todo en localStorage + estado
   useEffect(() => {
@@ -60,11 +80,11 @@ export default function ProfilePage() {
           icon: "success",
           confirmButtonText: "Continuar",
         }).then(() => {
-          setTimeout(() => router.push("/IA"), 5000);
+          setTimeout(() => router.push("/IA"), 500);
         });
       }
       setCheckedAuth(true);
-    }, 3000);
+    }, 500);
     return () => clearTimeout(timer);
   }, [authData, checkedAuth, router]);
 

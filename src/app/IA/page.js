@@ -2,11 +2,13 @@
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
 import { useEffect, useRef, useState } from "react";
-
 export default function SpeechClient() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef(null);
+
+  
+  
 
   async function handleSendMessage(userInput) {
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
@@ -104,7 +106,6 @@ export default function SpeechClient() {
         <div className="flex justify-center items-center p-1 ">
           <InputReq onSend={handleSendMessage} />
         </div>
-        
       </div>
     </>
   );

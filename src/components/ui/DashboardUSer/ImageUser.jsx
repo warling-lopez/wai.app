@@ -2,27 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../button";
 import { useRouter } from "next/navigation";
-import { Supabase } from "@/supabase/supabase";
 
 function ImageUser() {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
   const [avatar, setAvatar] = useState("");
-
-  const papa = async () => {
-    const { data: { session }, error } = await Supabase.auth.getSession();
-
-    if (session) {
-  console.log(session.user); // info del usuario
-  console.log(session.access_token); // token actual
-}
-
-
-  }
   
-papa;
-
-
   useEffect(() => {
     const tokenString = localStorage.getItem(
       "sb-hrgajcbtdlljpcwvenmf-auth-token"
@@ -32,7 +17,7 @@ papa;
         const parsed = JSON.parse(tokenString);
         setUserData(parsed);
 
-        const email = parsed?.refresh_token;
+        const email = parsed?.user?.user_metadata?.email;
         if (email) {
           const diceBearUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${email}`;
           setAvatar(diceBearUrl);
@@ -54,9 +39,9 @@ papa;
 
   return (
     <div className="flex flex-row items-center justify-evenly w-full">
-      <img src={avatar} alt="avatar" className="w-10 rounded-full" />
+      <img src={avatar} alt="avatar" className="w-10 rounded-full bg-slate-400" />
       <span className="mt-2 text-xl">
-        {userData?.refresh_token}
+        {userData.user.user_metadata.username || "Usuario Anónimo"}
       </span>
     </div>
   );
