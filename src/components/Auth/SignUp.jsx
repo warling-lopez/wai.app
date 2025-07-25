@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 function SignIn(props) {
   const { className, ...rest } = props;
@@ -59,8 +60,25 @@ function SignIn(props) {
         return;
       }
 
-      console.log("Usuario registrado:", data);
-      // Aquí podrías redirigir al usuario o mostrar mensaje de éxito
+      Swal.fire({
+        title: "verifica tu correo",
+        showClass: {
+          popup: `
+      animate__animated
+      animate__fadeInUp
+      animate__faster
+    `,
+        },
+        hideClass: {
+          popup: `
+      animate__animated
+      animate__fadeOutDown
+      animate__faster
+    `,
+        },
+      }).then(() => {
+        direction.replace("/");
+      });
     } catch (error) {
       console.error("Error al registrar:", error.message);
     }

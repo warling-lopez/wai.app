@@ -69,7 +69,7 @@ export default function ProfilePage() {
         swal
           .fire({
             title: "No tienes una cuenta!",
-            text: "Por favor, regístrate o verifica tu cuenta!.",
+            text: "Por favor, regístrate o verifica tu cuenta!",
             icon: "info",
             confirmButtonText: "Registrarse",
           })
