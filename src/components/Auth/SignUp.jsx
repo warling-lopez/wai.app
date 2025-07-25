@@ -217,7 +217,7 @@ function SignIn(props) {
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
         <a href="/services&rules">Términos y Servicios </a>
-        <a href="privacity">Políticas de Privacidad</a>
+        <a href="/privacity">Políticas de Privacidad</a>
       </div>
     </div>
   );
