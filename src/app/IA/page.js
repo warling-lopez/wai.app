@@ -10,15 +10,6 @@ export default function SpeechClient() {
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef(null);
 
-  //pruebas
-
-  useEffect(() => {
-    const todoElHTML = document.documentElement.outerHTML;
-    console.log(todoElHTML);
-  }, []); // <-- Esto es para ver el HTML completo de la página`
-
-  //pruebas ^
-
   async function handleSendMessage(userInput) {
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
     setIsTyping(true);
@@ -54,7 +45,7 @@ export default function SpeechClient() {
           index++;
         } else {
           clearInterval(interval);
-          setIsTyping(false);// <-- llamar aquí, una vez finalizado el texto
+          setIsTyping(false); // <-- llamar aquí, una vez finalizado el texto
         }
       }, 100); // intervalo 100 ms
     } catch (error) {
