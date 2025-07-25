@@ -12,8 +12,10 @@ export default function SpeechClient() {
 
   //pruebas
 
-  const todoElHTML = document.documentElement.outerHTML;
-  console.log(todoElHTML);
+  useEffect(() => {
+    const todoElHTML = document.documentElement.outerHTML;
+    console.log(todoElHTML);
+  }, []); // <-- Esto es para ver el HTML completo de la página`
 
   //pruebas ^
 
@@ -52,8 +54,7 @@ export default function SpeechClient() {
           index++;
         } else {
           clearInterval(interval);
-          setIsTyping(false);
-          guardarEnBD(); // <-- llamar aquí, una vez finalizado el texto
+          setIsTyping(false);// <-- llamar aquí, una vez finalizado el texto
         }
       }, 100); // intervalo 100 ms
     } catch (error) {
@@ -87,8 +88,8 @@ export default function SpeechClient() {
       <div className="grid h-[90vh] w-full col-span-3">
         <div className="flex flex-col w-full items-center p-4 overflow-y-auto">
           <div className="w-full md:w-[70vw] xl:w-[40vw]">
-            {messages.map((msg, idx) => (
-              <Msg key={idx} role={msg.role} content={msg.content} />
+            {messages.map((msg, index) => (
+              <Msg key={index} role={msg.role} content={msg.content} />
             ))}
             <div ref={bottomRef} />
           </div>
