@@ -10,6 +10,13 @@ export default function SpeechClient() {
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef(null);
 
+  //pruebas
+
+  const todoElHTML = document.documentElement.outerHTML;
+  console.log(todoElHTML);
+
+  //pruebas ^
+
   async function handleSendMessage(userInput) {
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
     setIsTyping(true);
@@ -58,7 +65,6 @@ export default function SpeechClient() {
       setIsTyping(false);
     }
   }
-
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });

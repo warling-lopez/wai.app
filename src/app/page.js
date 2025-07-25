@@ -12,7 +12,7 @@ export default function ProfilePage() {
   const STORAGE_KEY = "sb-hrgajcbtdlljpcwvenmf-auth-token";
 
   const [authData, setAuthData] = useState(null);
-  
+
   const [checkedAuth, setCheckedAuth] = useState(false);
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function ProfilePage() {
         swal
           .fire({
             title: "No tienes una cuenta!",
-            text: "Por favor, regístrate para continuar.",
+            text: "Por favor, regístrate o verifica tu cuenta!.",
             icon: "info",
             confirmButtonText: "Registrarse",
           })

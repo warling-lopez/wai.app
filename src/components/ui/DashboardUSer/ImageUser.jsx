@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "../button";
 import { useRouter } from "next/navigation";
@@ -7,7 +7,7 @@ function ImageUser() {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
   const [avatar, setAvatar] = useState("");
-  
+
   useEffect(() => {
     const tokenString = sessionStorage.getItem(
       "sb-hrgajcbtdlljpcwvenmf-auth-token"
@@ -39,9 +39,13 @@ function ImageUser() {
 
   return (
     <div className="flex flex-row items-center justify-evenly w-full">
-      <img src={avatar} alt="avatar" className="w-10 rounded-full bg-slate-400" />
+      <img
+        src={avatar}
+        alt="avatar"
+        className="w-10 rounded-full bg-slate-400"
+      />
       <span className="mt-2 text-xl">
-        {userData?.user_metadata?.username || "Usuario Anónimo"}
+        {userData?.user_metadata?.full_name || "Usuario Anónimo"}
       </span>
     </div>
   );

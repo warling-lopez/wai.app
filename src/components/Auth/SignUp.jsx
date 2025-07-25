@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
 function SignIn(props) {
   const { className, ...rest } = props;
   const [name, setName] = useState("");
@@ -30,31 +31,40 @@ function SignIn(props) {
     await Supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `https://wai-app.vercel.app/IA`,
+        redirectTo: `https://wai-app.vercel.app/`,
       },
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      // Ahora registramos al usuario en lugar de iniciar sesión
       const { data, error } = await Supabase.auth.signUp({
         email,
         password,
         options: {
-          data: { username: name },
-          redirectTo: `/IA`,
+          data: { full_name: name },
+          redirectTo: `/`,
         },
       });
-      if (error) throw error;
-      // Redirigir tras registro exitoso
-      direction.push("/IA");
+
+      if (error) {
+        if (error.message.includes("User already registered")) {
+          console.error("Este correo ya está registrado.");
+          // Aquí puedes mostrar un mensaje al usuario también
+        } else {
+          throw error;
+        }
+        return;
+      }
+
+      console.log("Usuario registrado:", data);
+      // Aquí podrías redirigir al usuario o mostrar mensaje de éxito
     } catch (error) {
       console.error("Error al registrar:", error.message);
     }
   };
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden">
