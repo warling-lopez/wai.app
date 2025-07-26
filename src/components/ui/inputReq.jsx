@@ -60,7 +60,7 @@ function InputReq({ className, type = "text", onSend, ...props }) {
       />
       {/*integraciones con la iA*/}
       <div className="flex justify-end py-2 space-x-2">
-        <TTS assistantResponse={resModelo} />
+        <TTS assistantResponse={resModelo} className="hidden" />
         {/* STT envía directamente la transcripción a onSend */}
         <STT onTranscribe={handleSendClick} />
         <div>
