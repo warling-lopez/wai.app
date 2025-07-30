@@ -45,7 +45,7 @@ function ImageUser() {
         className="w-10 rounded-full bg-slate-400"
       />
       <span className="mt-2 text-xl">
-        {userData?.user_metadata?.full_name || "Usuario Anónimo"}
+        {userData?.user_metadata?.full_name || "Anónimo"}
       </span>
     </div>
   );
