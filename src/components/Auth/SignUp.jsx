@@ -1,5 +1,6 @@
 // src/components/Auth/SignIn.js
 "use client";
+import Swal from "sweetalert2";
 import { Supabase } from "@/Supabase/Supabase";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,45 +12,56 @@ import { FaMeta } from "react-icons/fa6";
 import { FaGoogle } from "react-icons/fa";
 import { GrApple } from "react-icons/gr";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 function SignUp(props) {
   const { className, ...rest } = props;
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
 
+  const inputRef = useRef(null);
+
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const { data: existing, error } = await Supabase
-    .from("profiles")
-    .select("email")
-    .eq("email", email);
+    // Limpiar errores previos
+    inputRef.current.setCustomValidity("");
 
-  if (error) {
-    console.error("Error al verificar:", error.message);
-    return;
-  }
+    const { data: existing, error } = await Supabase.from("profiles")
+      .select("email")
+      .eq("email", email);
 
-  if (existing.length > 0) {
-    console.error("El correo ya está registrado");
-    return;
-  }
+    if (error) {
+      inputRef.current.setCustomValidity("Error al verificar el correo.");
+      inputRef.current.reportValidity();
+      return;
+    }
 
-  // No existe, enviamos OTP
-  const { data, error: otpError } = await Supabase.auth.signInWithOtp({
-    email,
-    options: {
-      data: { full_name: name },
-    },
-  });
+    if (existing.length > 0) {
+      inputRef.current.setCustomValidity("Este correo ya está registrado.");
+      inputRef.current.reportValidity();
+      return;
+    }
 
-  if (otpError) {
-    console.error("Error al enviar OTP:", otpError.message);
-  } else {
-    console.log("OTP enviado a", email);
-  }
-};
+    const { error: otpError } = await Supabase.auth.signInWithOtp({
+      email,
+      options: { data: { full_name: name } }, // usa tu variable real
+    });
+
+    if (otpError) {
+      inputRef.current.setCustomValidity("No se pudo enviar el correo.");
+      inputRef.current.reportValidity();
+      return;
+    }
+
+    // Todo bien, limpiamos error por si acaso
+    inputRef.current.setCustomValidity("");
+    Swal.fire({
+      title: "Correo enviado correctamente!",
+      icon: "success",
+      draggable: true,
+    });
+  };
 
   const handleSubmitWithGoogle = async () => {
     await Supabase.auth.signInWithOAuth({
@@ -87,7 +99,11 @@ function SignUp(props) {
               <div className="grid gap-5">
                 <Label htmlFor="email">Correo</Label>
                 <Input
-                  onChange={(e) => setEmail(e.target.value)}
+                  ref={inputRef}
+                  onChange={(e) => {
+                    inputRef.current.setCustomValidity(""); // limpiar al escribir
+                    setEmail(e.target.value);
+                  }}
                   id="email"
                   type="email"
                   placeholder="tucorreo@ejemplo.com"
