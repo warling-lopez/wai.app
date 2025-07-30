@@ -24,9 +24,6 @@ function SignUp(props) {
     try {
       const { data, error } = await Supabase.auth.signInWithOtp({
         email,
-        options: {
-          data: { name },
-        },
       });
       if (error) throw error;
     } catch (error) {
@@ -52,7 +49,7 @@ function SignUp(props) {
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Bienvenido a WALLY</h1>
                 <p className="text-balance text-muted-foreground">
-                  Crea tu cuenta en Wally Inc
+                  Inicia sesión en Wally Inc
                 </p>
               </div>
               <div className="grid gap-5">

@@ -19,20 +19,37 @@ function SignUp(props) {
   const [name, setName] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const { data, error } = await Supabase.auth.signInWithOtp({
-        email,
-        options: {
-          data: { name },
-        },
-      });
-      if (error) throw error;
-    } catch (error) {
-      console.log("Error al registrar:", error);
-    }
-  };
+  const { data: existing, error } = await Supabase
+    .from("profiles")
+    .select("email")
+    .eq("email", email);
+
+  if (error) {
+    console.error("Error al verificar:", error.message);
+    return;
+  }
+
+  if (existing.length > 0) {
+    console.error("El correo ya está registrado");
+    return;
+  }
+
+  // No existe, enviamos OTP
+  const { data, error: otpError } = await Supabase.auth.signInWithOtp({
+    email,
+    options: {
+      data: { full_name: name },
+    },
+  });
+
+  if (otpError) {
+    console.error("Error al enviar OTP:", otpError.message);
+  } else {
+    console.log("OTP enviado a", email);
+  }
+};
 
   const handleSubmitWithGoogle = async () => {
     await Supabase.auth.signInWithOAuth({
