@@ -3,7 +3,6 @@
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
 import { useEffect, useRef, useState } from "react";
-import { Supabase } from "@/Supabase/Supabase"; // <-- Importar supabase
 
 export default function SpeechClient() {
   const [messages, setMessages] = useState([]);
@@ -59,20 +58,28 @@ export default function SpeechClient() {
   }
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const lastMessage = messages[messages.length - 1];
 
-    const lastAssistantMessage = messages
-      .slice()
-      .reverse()
-      .find((m) => m.role === "assistant");
+    /*
+      Solo hace scroll si:
+      El mensaje es del usuario (siempre)
+      O el mensaje es del asistente y ya terminó de escribir (isTyping === false)
+    */
+   
+    if (
+      lastMessage?.role === "user" ||
+      (lastMessage?.role === "assistant" && !isTyping)
+    ) {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 
-    if (lastAssistantMessage && typeof window !== "undefined") {
-      sessionStorage.setItem(
-        "Respuesta del modelo",
-        JSON.stringify(lastAssistantMessage.content)
-      );
+      if (lastMessage.role === "assistant" && typeof window !== "undefined") {
+        sessionStorage.setItem(
+          "Respuesta del modelo",
+          JSON.stringify(lastMessage.content)
+        );
+      }
     }
-  }, [messages]);
+  }, [messages, isTyping]);
 
   return (
     <>

@@ -34,13 +34,12 @@ function InputReq({ className, type = "text", onSend, ...props }) {
   };
 
   return (
-    <div className="rounded-4xl pr-1 pl-1 border shadow-[0px_-20px_25px_rgba(255,255,255)] top-0 w-full md:w-[70vw] xl:w-[40vw] mb-16">
+    <div className="rounded-4xl pr-1 pl-1 border shadow-[0px_-20px_25px_rgba(255,255,255)] top-0 w-full md:w-[70vw] xl:w-[40vw] ">
       <textarea
         ref={inputRef}
         value={input}
         onChange={(e) => {
           setInput(e.target.value);
-          e.target.style.height = "60px";
           e.target.style.height = e.target.scrollHeight + "px";
         }}
         onKeyDown={(e) => {
