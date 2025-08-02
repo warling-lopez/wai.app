@@ -34,7 +34,7 @@ function InputReq({ className, type = "text", onSend, ...props }) {
   };
 
   return (
-    <div className="rounded-4xl pr-1 pl-1 border shadow-[0px_-20px_25px_rgba(255,255,255)] top-0 w-full md:w-[70vw] xl:w-[40vw] ">
+    <div className="rounded-4xl pr-1 pl-1 border shadow-[0px_-20px_25px_[background]] top-0 w-full md:w-[70vw] xl:w-[40vw] ">
       <textarea
         ref={inputRef}
         value={input}
@@ -50,7 +50,7 @@ function InputReq({ className, type = "text", onSend, ...props }) {
         }}
         placeholder="Pregúntale a WALLY"
         className={cn(
-          "max-h-[200px] resize-none overflow-hidden placeholder:text-muted-foreground selection:bg-primary text-gray-700 selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 border-0 bg-transparent px-3 py-2 text-base outline-none h-[60px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-xl",
+          "max-h-[200px] rounded-2xl *: resize-none overflow-hidden placeholder:text-muted-foreground selection:bg-primary text-foreground selection:text-primary-foreground bg-background border-input flex w-full min-w-0 border-0 dark:bg-transparent px-3 py-2 text-base outline-none h-[60px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-xl",
           className
         )}
         rows={1}

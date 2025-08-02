@@ -17,9 +17,10 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import SwitchTheme from "./ui/switchTheme";
 
 export function AppSidebar() {
-    const router = useRouter();
+  const router = useRouter();
 
   const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState("General");
@@ -54,7 +55,7 @@ export function AppSidebar() {
           text: "Your file has been deleted.",
           icon: "success",
         });
-        localStorage.clear()
+        localStorage.clear();
         router.refresh();
       }
     });
@@ -74,7 +75,7 @@ export function AppSidebar() {
                       <button
                         onClick={() =>
                           item.action ? item.action() : router.push(item.url)
-                        } 
+                        }
                         className="flex items-center gap-2"
                       >
                         <item.icon />
@@ -91,8 +92,8 @@ export function AppSidebar() {
       </Sidebar>
 
       {showSettings && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-          <div className="bg-white w-[90%] max-w-3xl h-[500px] flex rounded-lg shadow-lg overflow-hidden">
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center ">
+          <div className="bg-background text-foreground w-[90%] max-w-3xl h-[500px] flex rounded-lg shadow-lg overflow-hidden">
             {/* Tabs laterales */}
             <div className="w-1/4 bg-gray-100 p-4 space-y-2 border-r">
               {settingsTabs.map((tab) => (
@@ -131,6 +132,10 @@ export function AppSidebar() {
                 <div>
                   <h2 className="text-xl font-bold mb-4">Apariencia</h2>
                   <p>Modo claro, oscuro, tamaños de letra, etc.</p>
+                  <div className="flex items-center space-x-4 mt-4">
+                    <label className="text-sm">Modo Oscuro</label>
+                    <SwitchTheme />
+                  </div>
                 </div>
               )}
               {activeTab === "Avanzado" && (
