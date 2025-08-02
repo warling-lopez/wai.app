@@ -22,9 +22,11 @@ import { Supabase } from "@/Supabase/Supabase";
 
 export function AppSidebar() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState("General");
+
+  const settingsTabs = ["General", "Apariencia", "Avanzado"];
+
 
   async function handleNewChat() {
     const {
