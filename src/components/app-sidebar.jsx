@@ -33,6 +33,14 @@ export function AppSidebar() {
   }, []);
 
   async function handleNewChat() {
+    const { data, error } = await Supabase.from('Chats').insert([
+  {
+    user_id: session.user.id,  // usa auth.user()?.id si estás en cliente
+    title: 'Nuevo chat'
+  }
+]);
+
+    /*
     if (!currentUser?.id) {
       Swal.fire("Error", "Usuario no autenticado", "error");
       return;
@@ -42,7 +50,6 @@ export function AppSidebar() {
       const { data: chat, error: chatError } = await Supabase
         .from("Chats")
         .insert([{ user_id: currentUser.id, title: "Chat nuevo" }])
-        .select()
         .single();
 
       if (chatError) throw chatError;
@@ -50,7 +57,7 @@ export function AppSidebar() {
       router.push(`/chat/${chat.id}`);
     } catch (error) {
       Swal.fire("Error", `No se pudo crear el chat: ${error.message}`, "error");
-    }
+    }*/
   }
 
   const items = [
