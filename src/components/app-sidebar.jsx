@@ -25,7 +25,7 @@ export function AppSidebar() {
   const [currentUser, setCurrentUser] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState("General");
-
+ const settingsTabs = ["General", "Apariencia", "Avanzado"];
 
   async function handleNewChat() {
 const {
