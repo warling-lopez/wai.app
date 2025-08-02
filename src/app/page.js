@@ -27,6 +27,8 @@ export default function ProfilePage() {
         return null;
       }
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+      
       return user;
     };
     getUserInfo();
