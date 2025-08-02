@@ -26,8 +26,8 @@ const Msg = ({ role, content }) => {
         className={cn(
           "max-w-[80%] px-4 py-2 rounded-xl whitespace-pre-wrap",
           isUser
-            ? "bg-gray-300 break-words overflow-hidden text-gray-900 rounded-br-none"
-            : "bg-white text-gray-900 rounded-bl-none"
+            ? "bg-primary break-words overflow-hidden text-foreground rounded-br-none"
+            : "bg-background text-foreground rounded-bl-none"
         )}
       >
         <ReactMarkdown>{content}</ReactMarkdown>

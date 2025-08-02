@@ -1,6 +1,6 @@
 "use client";
-
-import { Calendar, Home, IdCard, Inbox, Search, Settings } from "lucide-react";
+import { useEffect } from "react";
+import { Calendar, SquarePen, Search, Settings } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,27 +18,48 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import SwitchTheme from "./ui/switchTheme";
+import { Supabase } from "@/Supabase/Supabase";
 
 export function AppSidebar() {
   const router = useRouter();
-
+  const [currentUser, setCurrentUser] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState("General");
 
-  const settingsTabs = ["General", "Apariencia", "Avanzado"];
+  useEffect(() => {
+    Supabase.auth.getUser().then(({ data }) => {
+      setCurrentUser(data.user);
+    });
+  }, []);
+
+  async function handleNewChat() {
+    if (!currentUser?.id) {
+      Swal.fire("Error", "Usuario no autenticado", "error");
+      return;
+    }
+
+    try {
+      const { data: chat, error: chatError } = await Supabase
+        .from("chats")
+        .insert([{ user_id: currentUser.id, title: "Chat nuevo" }])
+        .select()
+        .single();
+
+      if (chatError) throw chatError;
+
+      router.push(`/chat/${chat.id}`);
+    } catch (error) {
+      Swal.fire("Error", `No se pudo crear el chat: ${error.message}`, "error");
+    }
+  }
 
   const items = [
-    { title: "Home", url: "/", icon: Home },
-    { title: "Login", url: "/log/signup", icon: IdCard },
-    { title: "Pruevas", url: "/c/[uid]/", icon: Inbox },
-    { title: "Calendar", url: "#", icon: Calendar },
+    { title: "Nuevo Chat", icon: SquarePen, action: handleNewChat },
     { title: "Search", url: "#", icon: Search },
-    {
-      title: "Settings",
-      icon: Settings,
-      action: () => setShowSettings(true),
-    },
+    { title: "Calendar", url: "#", icon: Calendar },
+    { title: "Settings", icon: Settings, action: () => setShowSettings(true) },
   ];
+
   const saveLoader = () => {
     Swal.fire({
       title: "Estas seguro?",
@@ -60,14 +81,13 @@ export function AppSidebar() {
       }
     });
   };
-
   return (
     <>
       <Sidebar>
         <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>WALLY MENU</SidebarGroupLabel>
+          <SidebarGroup className="flex justify-between flex-col h-full">
             <SidebarGroupContent className={"flex justify-between flex-wrap"}>
+              <SidebarGroupLabel>WALLY MENU</SidebarGroupLabel>
               <SidebarMenu className={"flex flex-col gap-2"}>
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
@@ -85,8 +105,8 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
-              <ImageUser />
             </SidebarGroupContent>
+            <ImageUser />
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
