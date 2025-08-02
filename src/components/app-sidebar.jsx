@@ -18,6 +18,7 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import SwitchTheme from "./ui/switchTheme";
+import ChatsList from "@/hooks/handleforViewChatsOfUsers";
 import { Supabase } from "@/Supabase/Supabase";
 
 export function AppSidebar() {
@@ -108,6 +109,9 @@ if (user) {
                 ))}
               </SidebarMenu>
             </SidebarGroupContent>
+            <div>
+              <ChatsList/>
+            </div>
             <ImageUser />
           </SidebarGroup>
         </SidebarContent>
