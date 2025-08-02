@@ -26,33 +26,31 @@ export function AppSidebar() {
   const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState("General");
 
-  useEffect(() => {
-    Supabase.auth.getUser().then(({ data }) => {
-      setCurrentUser(data.user);
-    });
-  }, []);
-
   async function handleNewChat() {
-const {
-  data: { user },
-  error: userError
-} = await Supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await Supabase.auth.getUser();
 
-if (user) {
-  const { data, error } = await Supabase.from('Chats').insert([
-    {
-      user_id: user.id,
-      title: 'Nuevo chat'
+    if (user) {
+      try {
+        const { data, error } = await Supabase.from("Chats").insert([
+          {
+            user_id: user.id,
+            title: "Nuevo chat",
+          },
+        ]);
+        console.log("Chat creado:", data);
+      } catch (error) {
+        console.error("Error al crear chat:", error.message);
+        Swal.fire(
+          "Error",
+          `No se pudo crear el chat: ${error.message}`,
+          "error"
+        );
+        return;
+      }
     }
-  ]);
-
-  if (error) {
-    console.error('Error al insertar chat:', error.message);
-  } else {
-    console.log('Chat creado:', data);
-  }
-}
-
 
     /*
     if (!currentUser?.id) {
