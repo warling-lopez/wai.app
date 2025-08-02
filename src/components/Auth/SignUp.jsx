@@ -67,7 +67,7 @@ function SignUp(props) {
     await Supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `https://wai-app.vercel.app/IA/`,
+        redirectTo: `https://wai-app.vercel.app/chat/`,
       },
     });
   };
