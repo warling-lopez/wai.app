@@ -33,12 +33,26 @@ export function AppSidebar() {
   }, []);
 
   async function handleNewChat() {
-    const { data, error } = await Supabase.from('Chats').insert([
-  {
-    user_id: session.user.id,  // usa auth.user()?.id si estás en cliente
-    title: 'Nuevo chat'
+const {
+  data: { user },
+  error: userError
+} = await Supabase.auth.getUser();
+
+if (user) {
+  const { data, error } = await Supabase.from('Chats').insert([
+    {
+      user_id: user.id,
+      title: 'Nuevo chat'
+    }
+  ]);
+
+  if (error) {
+    console.error('Error al insertar chat:', error.message);
+  } else {
+    console.log('Chat creado:', data);
   }
-]);
+}
+
 
     /*
     if (!currentUser?.id) {
