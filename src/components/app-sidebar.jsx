@@ -22,7 +22,6 @@ import { Supabase } from "@/Supabase/Supabase";
 
 export function AppSidebar() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState("General");
  const settingsTabs = ["General", "Apariencia", "Avanzado"];
@@ -54,26 +53,6 @@ if (user) {
     router.push(`/chat/${user.id}`);
   }
 }
-
-
-    /*
-    if (!currentUser?.id) {
-      Swal.fire("Error", "Usuario no autenticado", "error");
-      return;
-    }
-
-    try {
-      const { data: chat, error: chatError } = await Supabase
-        .from("Chats")
-        .insert([{ user_id: currentUser.id, title: "Chat nuevo" }])
-        .single();
-
-      if (chatError) throw chatError;
-
-      router.push(`/chat/${chat.id}`);
-    } catch (error) {
-      Swal.fire("Error", `No se pudo crear el chat: ${error.message}`, "error");
-    }*/
   }
 
   const items = [
