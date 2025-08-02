@@ -40,7 +40,7 @@ export function AppSidebar() {
 
     try {
       const { data: chat, error: chatError } = await Supabase
-        .from("chats")
+        .from("Chats")
         .insert([{ user_id: currentUser.id, title: "Chat nuevo" }])
         .select()
         .single();
