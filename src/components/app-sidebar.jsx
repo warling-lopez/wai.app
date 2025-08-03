@@ -32,26 +32,25 @@ export function AppSidebar() {
       data: { user },
       error: userError,
     } = await Supabase.auth.getUser();
+    try {
+      if (user) {
+        const { data, error } = await Supabase.from("Chats").insert([
+          {
+            user_id: user.id,
+            title: "Nuevo chat",
+          },
+        ]);
 
-    if (user) {
-      const { data, error } = await Supabase.from("Chats").insert([
-        {
-          user_id: user.id,
-          title: "Nuevo chat",
-        },
-      ]);
-
-      if (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: `No se pudo crear el chat: ${error.message}`,
-        });
-        console.error("Error al crear el chat:", error);
-      } else {
         console.log("Chat creado:", data);
         router.push(`/chat/${user.id}`);
       }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `No se pudo crear el chat: ${error.message}`,
+      });
+      console.error("Error al crear el chat:", error);
     }
   }
 
@@ -75,11 +74,12 @@ export function AppSidebar() {
       if (result.isConfirmed) {
         Swal.fire({
           title: "Deleted!",
-          text: "Your file has been deleted.",
+          text: "Your perfil has been deleted.",
           icon: "success",
         });
         localStorage.clear();
-        router.refresh();
+        sessionStorage.clear();
+        router.refresh("/chat");
       }
     });
   };
