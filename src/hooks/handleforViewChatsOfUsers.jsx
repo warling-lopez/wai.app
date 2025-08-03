@@ -31,8 +31,8 @@ export default function ChatsList() {
   }, []);
 
   return (
-    <div className="p-4">
-      <h2 className="text-ms font-bold mb-4">Mis chats</h2>
+    <div >
+      <h2 className="text-sm text-accent mb-4">Mis chats</h2>
       <ul className="space-y-2">
         {chats.length === 0 ? (
           <li className="text-gray-500">No tienes chats aún.</li>
@@ -40,7 +40,7 @@ export default function ChatsList() {
           chats.map((chat) => (
             <li
               key={chat.id}
-              className="p-3 bg-background rounded hover:bg-primary text-foreground cursor-pointer"
+              className="p-b-2 text-md rounded-xl hover:bg-background text-foreground cursor-pointer"
               onClick={() => router.push(`/chat/${chat.id}`)}
             >
               {chat.title}

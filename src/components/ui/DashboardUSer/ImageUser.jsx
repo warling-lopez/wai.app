@@ -38,7 +38,7 @@ function ImageUser() {
     );
 
   return (
-    <div className="flex flex-row items-center justify-evenly w-full">
+    <div className="flex absolute bottom-0 bg-background items-center justify-center w-full">
       <img
         src={avatar}
         alt="avatar"

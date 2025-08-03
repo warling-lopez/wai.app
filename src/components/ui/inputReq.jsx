@@ -34,7 +34,7 @@ function InputReq({ className, type = "text", onSend, ...props }) {
   };
 
   return (
-    <div className="rounded-4xl pr-1 pl-1 border shadow-[0px_-20px_25px_[background]] top-0 w-full md:w-[70vw] xl:w-[40vw] ">
+    <div className="rounded-4xl pr-1 pl-1 border shadow-[0px_-20px_25px_[var(--inputReq-shadow)]] top-0 w-full md:w-[70vw] xl:w-[40vw] ">
       <textarea
         ref={inputRef}
         value={input}

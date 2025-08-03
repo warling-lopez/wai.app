@@ -87,7 +87,7 @@ export function AppSidebar() {
     <>
       <Sidebar>
         <SidebarContent>
-          <SidebarGroup className="flex justify-between flex-col h-full">
+          <SidebarGroup className="flex justify-baseline flex-wrap gap-10">
             <SidebarGroupContent className={"flex justify-between flex-wrap "}>
               <SidebarGroupLabel>WALLY MENU</SidebarGroupLabel>
               <SidebarMenu className={"flex flex-col gap-2 text-sm"}>
