@@ -25,35 +25,34 @@ export function AppSidebar() {
   const router = useRouter();
   const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState("General");
- const settingsTabs = ["General", "Apariencia", "Avanzado"];
+  const settingsTabs = ["General", "Apariencia", "Avanzado"];
 
   async function handleNewChat() {
-const {
-  data: { user },
-  error: userError
-} = await Supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await Supabase.auth.getUser();
 
-if (user) {
-  
-  const { data, error } = await Supabase.from('Chats').insert([
-    {
-      user_id: user.id,
-      title: 'Nuevo chat'
+    if (user) {
+      const { data, error } = await Supabase.from("Chats").insert([
+        {
+          user_id: user.id,
+          title: "Nuevo chat",
+        },
+      ]);
+
+      if (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: `No se pudo crear el chat: ${error.message}`,
+        });
+        console.error("Error al crear el chat:", error);
+      } else {
+        console.log("Chat creado:", data);
+        router.push(`/chat/${user.id}`);
+      }
     }
-  ]);
-
-  if (error) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: `No se pudo crear el chat: ${error.message}`,
-    });
-    console.error('Error al crear el chat:', error);
-  } else {
-    console.log('Chat creado:', data);
-    router.push(`/chat/${user.id}`);
-  }
-}
   }
 
   const items = [
@@ -110,7 +109,7 @@ if (user) {
               </SidebarMenu>
             </SidebarGroupContent>
             <div>
-              <ChatsList/>
+              <ChatsList />
             </div>
             <ImageUser />
           </SidebarGroup>
