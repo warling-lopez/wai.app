@@ -14,7 +14,6 @@ export async function POST(request) {
     .insert([{ Chat_id, role, content }]);
 
   if (error) {
-    console.error(error);
     return new Response(JSON.stringify({ error: "Database error" }), { status: 500 });
   }
 

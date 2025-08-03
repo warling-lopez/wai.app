@@ -2,13 +2,14 @@
 
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
+import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-
+import { Supabase } from "@/Supabase/Supabase";
 export default function SpeechClientChat() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef(null);
-
+  const { id: chatId } = useParams(); 
   async function handleSendMessage(userInput) {
     // Agregar mensaje del usuario al estado local
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
@@ -19,7 +20,7 @@ export default function SpeechClientChat() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        Chat_id: "default", // <-- reemplaza con ID real si lo tienes
+        Chat_id: chatId,
         role: "user",
         content: userInput,
       }),
@@ -63,7 +64,7 @@ export default function SpeechClientChat() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              Chat_id: "default", // <-- igual que arriba
+              Chat_id: chatId,
               role: "assistant",
               content: fullText,
             }),
@@ -79,6 +80,25 @@ export default function SpeechClientChat() {
       setIsTyping(false);
     }
   }
+  useEffect(() => {
+  async function loadMessages() {
+    if (!chatId) return;
+
+    const { data, error } = await Supabase
+      .from("msg")
+      .select("role, content") // puedes incluir más campos si quieres
+      .eq("Chat_id", chatId)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error("Error al cargar mensajes:", error);
+    } else {
+      setMessages(data);
+    }
+  }
+
+  loadMessages();
+}, [chatId]);
 
   useEffect(() => {
     const lastMessage = messages[messages.length - 1];
