@@ -1,6 +1,6 @@
 {
-  "name": "Wally",
-  "version": "0.5.0",
+  "name": "Workay",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
