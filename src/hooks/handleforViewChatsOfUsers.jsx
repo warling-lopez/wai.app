@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Supabase } from "@/Supabase/Supabase";
+import { useRouter } from "next/navigation";
 
 export default function ChatsList() {
   const [chats, setChats] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchChats() {
@@ -39,7 +41,7 @@ export default function ChatsList() {
             <li
               key={chat.id}
               className="p-3 bg-background rounded hover:bg-primary text-foreground cursor-pointer"
-              onClick={() => window.location.href = `/chat/${chat.id}`}
+              onClick={() => router.push(`/chat/${chat.id}`)}
             >
               {chat.title}
             </li>
