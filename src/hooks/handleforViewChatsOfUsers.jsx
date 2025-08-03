@@ -30,7 +30,7 @@ export default function ChatsList() {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Mis chats</h2>
+      <h2 className="text-ms font-bold mb-4">Mis chats</h2>
       <ul className="space-y-2">
         {chats.length === 0 ? (
           <li className="text-gray-500">No tienes chats aún.</li>
@@ -38,7 +38,7 @@ export default function ChatsList() {
           chats.map((chat) => (
             <li
               key={chat.id}
-              className="p-3 bg-gray-100 rounded hover:bg-gray-200 cursor-pointer"
+              className="p-3 bg-background rounded hover:bg-primary text-foreground cursor-pointer"
               onClick={() => window.location.href = `/chat/${chat.id}`}
             >
               {chat.title}
