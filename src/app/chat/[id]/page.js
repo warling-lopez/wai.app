@@ -10,8 +10,20 @@ export default function SpeechClientChat() {
   const bottomRef = useRef(null);
 
   async function handleSendMessage(userInput) {
+    // Agregar mensaje del usuario al estado local
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
     setIsTyping(true);
+
+    // 📝 Guardar mensaje del usuario en Supabase
+    await fetch("/api/send-msg-supabase", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        Chat_id: "default", // <-- reemplaza con ID real si lo tienes
+        role: "user",
+        content: userInput,
+      }),
+    });
 
     try {
       const res = await fetch("/api/server", {
@@ -27,7 +39,7 @@ export default function SpeechClientChat() {
       let words = fullText.split(" ");
       let generated = "";
 
-      const interval = setInterval(() => {
+      const interval = setInterval(async () => {
         if (index < words.length) {
           generated += (index === 0 ? "" : " ") + words[index];
           setMessages((prev) => {
@@ -44,9 +56,20 @@ export default function SpeechClientChat() {
           index++;
         } else {
           clearInterval(interval);
-          setIsTyping(false); // <-- llamar aquí, una vez finalizado el texto
+          setIsTyping(false);
+
+          // ✅ Guardar respuesta del asistente al terminar de escribir
+          await fetch("/api/send-msg-supabase", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              Chat_id: "default", // <-- igual que arriba
+              role: "assistant",
+              content: fullText,
+            }),
+          });
         }
-      }, 100); // intervalo 100 ms
+      }, 100);
     } catch (error) {
       console.error("Error al obtener respuesta:", error);
       setMessages((prev) => [
@@ -59,20 +82,13 @@ export default function SpeechClientChat() {
 
   useEffect(() => {
     const lastMessage = messages[messages.length - 1];
-
-    /*
-      Solo hace scroll si:
-      El mensaje es del usuario (siempre)
-      O el mensaje es del asistente y ya terminó de escribir (isTyping === false)
-    */
-   
     if (
       lastMessage?.role === "user" ||
       (lastMessage?.role === "assistant" && !isTyping)
     ) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 
-      if (lastMessage.role === "assistant" && typeof window !== "undefined") {
+      if (lastMessage?.role === "assistant" && typeof window !== "undefined") {
         sessionStorage.setItem(
           "Respuesta del modelo",
           JSON.stringify(lastMessage.content)
