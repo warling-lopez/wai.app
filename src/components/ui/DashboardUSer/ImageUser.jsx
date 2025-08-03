@@ -17,7 +17,7 @@ function ImageUser() {
         const parsed = JSON.parse(tokenString);
         setUserData(parsed);
 
-        const email = parsed?.user_metadata?.email;
+        const email = parsed?.user?.user_metadata?.email;
         if (email) {
           const diceBearUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${email}`;
           setAvatar(diceBearUrl);
