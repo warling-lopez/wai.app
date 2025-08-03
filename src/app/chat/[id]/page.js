@@ -9,11 +9,16 @@ export default function SpeechClientChat() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef(null);
-  const { id: chatId } = useParams(); 
+  const { id: chatId } = useParams();
+
   async function handleSendMessage(userInput) {
     // Agregar mensaje del usuario al estado local
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
     setIsTyping(true);
+    const {
+      data: { user },
+      error: userError,
+    } = await Supabase.auth.getUser();
 
     // 📝 Guardar mensaje del usuario en Supabase
     await fetch("/api/send-msg-supabase", {
@@ -23,8 +28,10 @@ export default function SpeechClientChat() {
         Chat_id: chatId,
         role: "user",
         content: userInput,
+        user_id: user?.id || null, // Asegurarse de que el usuario esté definido
       }),
     });
+    
 
     try {
       const res = await fetch("/api/server", {
@@ -81,24 +88,24 @@ export default function SpeechClientChat() {
     }
   }
   useEffect(() => {
-  async function loadMessages() {
-    if (!chatId) return;
+    async function loadMessages() {
+      if (!chatId) return;
 
-    const { data, error } = await Supabase
-      .from("msg")
-      .select("role, content") // puedes incluir más campos si quieres
-      .eq("Chat_id", chatId)
-      .order("created_at", { ascending: true });
+      const { data, error } = await Supabase.from("msg")
+        .select("role, content") // puedes incluir más campos si quieres
+        .eq("Chat_id", chatId)
+        .order("created_at", { ascending: true });
+        
 
-    if (error) {
-      console.error("Error al cargar mensajes:", error);
-    } else {
-      setMessages(data);
+      if (error) {
+        console.error("Error al cargar mensajes:", error);
+      } else {
+        setMessages(data);
+      }
     }
-  }
 
-  loadMessages();
-}, [chatId]);
+    loadMessages();
+  }, [chatId]);
 
   useEffect(() => {
     const lastMessage = messages[messages.length - 1];
