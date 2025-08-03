@@ -17,8 +17,8 @@ export default function ChatsList() {
         const { data, error } = await Supabase
           .from("Chats")
           .select("*")
-          .eq("user_id", user.id);
-
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false });
         if (error) {
           console.error("Error al obtener los chats:", error);
         } else {
