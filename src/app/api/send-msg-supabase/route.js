@@ -6,7 +6,7 @@ export async function POST(request) {
   const { Chat_id, role, content, user_id } = body;
 
   if (!Chat_id || !role || !content || user_id) {
-    return new Response(JSON.stringify({ error: "Missing data" }), { status: 400 });
+    return new Response(JSON.stringify({ error: "Missing data" }));
   }
 
   const { data, error } = await Supabase
@@ -14,7 +14,7 @@ export async function POST(request) {
     .insert([{ Chat_id, role, content, user_id }]);
 
   if (error) {
-    return new Response(JSON.stringify({ error: "Database error" }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Database error" }));
   }
 
   return new Response(JSON.stringify({ success: true, data }), { status: 200 });
