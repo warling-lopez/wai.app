@@ -28,10 +28,9 @@ export default function SpeechClientChat() {
         Chat_id: chatId,
         role: "user",
         content: userInput,
-        user_id: user?.id || null, // Asegurarse de que el usuario esté definido
+        user_id: user?.id || null,
       }),
     });
-    
 
     try {
       const res = await fetch("/api/server", {
@@ -74,6 +73,7 @@ export default function SpeechClientChat() {
               Chat_id: chatId,
               role: "assistant",
               content: fullText,
+              user_id: user?.id || null,
             }),
           });
         }
@@ -95,7 +95,6 @@ export default function SpeechClientChat() {
         .select("role, content") // puedes incluir más campos si quieres
         .eq("Chat_id", chatId)
         .order("created_at", { ascending: true });
-        
 
       if (error) {
         console.error("Error al cargar mensajes:", error);

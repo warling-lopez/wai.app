@@ -5,7 +5,7 @@ export async function POST(request) {
   const body = await request.json();
   const { Chat_id, role, content, user_id } = body;
 
-  if (!Chat_id || !role || !content || user_id) {
+if (!Chat_id || !role || !content || !user_id) {
     return new Response(JSON.stringify({ error: "Missing data" }), { status: 400 });
   }
 
