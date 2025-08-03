@@ -88,9 +88,9 @@ export function AppSidebar() {
       <Sidebar>
         <SidebarContent>
           <SidebarGroup className="flex justify-between flex-col h-full">
-            <SidebarGroupContent className={"flex justify-between flex-wrap"}>
+            <SidebarGroupContent className={"flex justify-between flex-wrap "}>
               <SidebarGroupLabel>WALLY MENU</SidebarGroupLabel>
-              <SidebarMenu className={"flex flex-col gap-2"}>
+              <SidebarMenu className={"flex flex-col gap-2 text-sm"}>
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
@@ -120,14 +120,14 @@ export function AppSidebar() {
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center ">
           <div className="bg-background text-foreground w-[90%] max-w-3xl h-[500px] flex rounded-lg shadow-lg overflow-hidden">
             {/* Tabs laterales */}
-            <div className="w-1/4 bg-gray-100 p-4 space-y-2 border-r">
+            <div className="w-1/4 bg-background p-4 space-y-2 border-r">
               {settingsTabs.map((tab) => (
                 <button
                   key={tab}
                   className={`w-full text-left px-3 py-2 rounded-md font-medium ${
                     activeTab === tab
-                      ? "bg-blue-100 text-blue-600"
-                      : "hover:bg-gray-200"
+                      ? "bg-primary text-chart-3"
+                      : "hover:bg-primary hover:text-chart-3"
                   }`}
                   onClick={() => setActiveTab(tab)}
                 >
