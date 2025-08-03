@@ -6,6 +6,8 @@ import TTS from "@/components/ui/speech/TTS";
 import STT from "@/components/ui/speech/STT";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
+import { Supabase } from "@/Supabase/Supabase";
+import OpenAI from "openai";
 
 function InputReq({ className, type = "text", onSend, ...props }) {
   const [input, setInput] = React.useState("");
@@ -23,13 +25,67 @@ function InputReq({ className, type = "text", onSend, ...props }) {
     return () => clearInterval(interval);
   }, []);
 
+  const addmsgSupabase = async (userInput) => {
+    const chatId = sessionStorage.getItem("chatId");
+    const userId = sessionStorage.getItem("userId");
+
+    if (!userInput.trim() || !chatId || !userId) return;
+
+    try {
+      // 1. Guardar mensaje del usuario
+      await Supabase.from("msg").insert({
+        chat_id: chatId,
+        sender_id: userId,
+        role: "user",
+        content: userInput,
+      });
+
+      // 2. Obtener historial
+      const { data: messages } = await Supabase.from("msg")
+        .select("*")
+        .eq("chat_id", chatId)
+        .order("created_at", { ascending: true });
+
+      const prompt = messages.map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
+
+      // 3. Enviar a OpenAI
+      const openai = new OpenAI({
+        apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+        dangerouslyAllowBrowser: false,
+      });
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4", // o gpt-3.5-turbo
+        messages: prompt,
+      });
+
+      const assistantResponse = completion.choices[0].message.content;
+
+      // 4. Guardar respuesta del modelo
+      await Supabase.from("msg").insert({
+        chat_id: chatId,
+        sender_id: "gpt",
+        role: "assistant",
+        content: assistantResponse,
+      });
+
+      sessionStorage.setItem("Respuesta del modelo", assistantResponse);
+    } catch (error) {
+      console.error("Error en addmsgSupabase:", error);
+    }
+  };
+
   const handleSendClick = async (userInput = input) => {
     if (!userInput.trim()) return;
     setIsLoading(true);
     setInput("");
     inputRef.current && (inputRef.current.style.height = "60px");
 
-    await onSend(userInput);
+    await onSend?.(userInput); // si quieres actualizar algún estado visual
+    await addmsgSupabase(userInput); // lógica de mensaje y respuesta
     setIsLoading(false);
   };
 
@@ -60,7 +116,7 @@ function InputReq({ className, type = "text", onSend, ...props }) {
       {/*integraciones con la iA*/}
       <div className="flex justify-end py-2 space-x-2">
         <TTS assistantResponse={resModelo} className="hidden" />
-        {/* STT envía directamente la transcripción a onSend */}
+        {/* STT envía directamente la transcripción a handleSendClick */}
         <STT onTranscribe={handleSendClick} />
         <div>
           <Button
