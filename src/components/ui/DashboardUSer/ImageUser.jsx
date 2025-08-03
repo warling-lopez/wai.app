@@ -38,15 +38,17 @@ function ImageUser() {
     );
 
   return (
-    <div className="flex absolute bottom-0 bg-background items-center justify-center w-full">
-      <img
-        src={avatar}
-        alt="avatar"
-        className="w-10 rounded-full bg-slate-400"
+    <div className="flex flex-row h-full relative bottom-0 bg-background rounded-md items-center justify-center mb-2 p-2">
+      <div className="grid grid-cols-2 place-content-center">
+        <img
+          src={avatar}
+          alt="avatar"
+          className="w-10 rounded-full bg-slate-400"
       />
       <span className="mt-2 text-xl">
         {userData?.user_metadata?.full_name || "Anónimo"}
       </span>
+    </div>
     </div>
   );
 }

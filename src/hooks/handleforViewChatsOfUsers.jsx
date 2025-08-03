@@ -31,7 +31,7 @@ export default function ChatsList() {
   }, []);
 
   return (
-    <div >
+    <div className="">
       <h2 className="text-sm text-accent mb-4">Mis chats</h2>
       <ul className="space-y-2">
         {chats.length === 0 ? (
