@@ -9,7 +9,7 @@ function ImageUser() {
   const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
-    const tokenString = sessionStorage.getItem(
+    const tokenString = localStorage.getItem(
       "sb-hrgajcbtdlljpcwvenmf-auth-token"
     );
     if (tokenString) {
