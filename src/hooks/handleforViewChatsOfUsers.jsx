@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Supabase } from "@/Supabase/Supabase";
 import { useRouter } from "next/navigation";
+import dayjs from "dayjs";
 
 export default function ChatsList() {
-  const [chats, setChats] = useState([]);
+  const [groupedChats, setGroupedChats] = useState({});
   const router = useRouter();
 
   useEffect(() => {
@@ -19,10 +20,12 @@ export default function ChatsList() {
           .select("*")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
+
         if (error) {
           console.error("Error al obtener los chats:", error);
         } else {
-          setChats(data);
+          const grouped = groupChatsByDate(data);
+          setGroupedChats(grouped);
         }
       }
     }
@@ -30,24 +33,51 @@ export default function ChatsList() {
     fetchChats();
   }, []);
 
+  function groupChatsByDate(chats) {
+    const groups = {
+      Hoy: [],
+      Ayer: [],
+      "Días anteriores": [],
+    };
+
+    const today = dayjs();
+    const yesterday = today.subtract(1, "day");
+
+    chats.forEach((chat) => {
+      const chatDate = dayjs(chat.created_at);
+      if (chatDate.isSame(today, "day")) {
+        groups.Hoy.push(chat);
+      } else if (chatDate.isSame(yesterday, "day")) {
+        groups.Ayer.push(chat);
+      } else {
+        groups["Días anteriores"].push(chat);
+      }
+    });
+
+    return groups;
+  }
+
   return (
     <div className="p-2">
       <h2 className="text-sm text-accent mb-4">Mis chats</h2>
-      <ul className="space-y-2">
-        {chats.length === 0 ? (
-          <li className="text-gray-500">No tienes chats aún.</li>
-        ) : (
-          chats.map((chat) => (
-            <li
-              key={chat.id}
-              className="p-2 text-md rounded-md hover:bg-background text-foreground cursor-pointer"
-              onClick={() => router.push(`/chat/${chat.id}`)}
-            >
-              {chat.title}
-            </li>
-          ))
-        )}
-      </ul>
+      {Object.entries(groupedChats).map(([section, chats]) =>
+        chats.length > 0 ? (
+          <div key={section} className="mb-4">
+            <h3 className="text-xs text-muted-foreground mb-1">{section}</h3>
+            <ul className="space-y-2">
+              {chats.map((chat) => (
+                <li
+                  key={chat.id}
+                  className="p-2 text-md rounded-md hover:bg-background text-foreground cursor-pointer"
+                  onClick={() => router.push(`/chat/${chat.id}`)}
+                >
+                  {chat.title}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : <li className="p-2 text-sm rounded-md hover:bg-background text-foreground cursor-pointer">No hay chats</li>
+      )}
     </div>
   );
 }
