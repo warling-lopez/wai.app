@@ -76,7 +76,7 @@ export default function ChatsList() {
               ))}
             </ul>
           </div>
-        ) : <li className="p-2 text-sm rounded-md hover:bg-background text-foreground cursor-pointer">No hay chats</li>
+        ) : null
       )}
     </div>
   );
