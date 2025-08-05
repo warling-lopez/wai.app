@@ -66,9 +66,6 @@ function SignUp(props) {
   const handleSubmitWithGoogle = async () => {
     await Supabase.auth.signInWithOAuth({
       provider: "google",
-      options: {
-        redirectTo: `https://wai-app.vercel.app/chat/`,
-      },
     });
   };
 

@@ -41,6 +41,7 @@ function ImageUser() {
     <div className="flex flex-row h-full relative bottom-0 bg-background rounded-md items-center justify-center mb-2 p-2">
       <div className="grid grid-cols-2 place-content-center">
         <img
+        
           src={avatar}
           alt="avatar"
           className="w-10 rounded-full bg-slate-400"
