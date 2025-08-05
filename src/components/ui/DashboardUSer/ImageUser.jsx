@@ -43,12 +43,12 @@ function ImageUser() {
         <img
           src={avatar}
           alt="avatar"
-          className="w-10 rounded-full bg-slate-400"
-      />
-      <span className="mt-2 text-xl">
-        {userData?.user?.user_metadata?.full_name || "Anónimo"}
-      </span>
-    </div>
+          className="w-6 rounded-full bg-slate-400"
+        />
+        <span className="mt-2 text-xl">
+          {userData?.user?.user_metadata?.full_name || "Anónimo"}
+        </span>
+      </div>
     </div>
   );
 }

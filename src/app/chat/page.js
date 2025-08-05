@@ -65,7 +65,7 @@ export default function SpeechClient() {
       El mensaje es del usuario (siempre)
       O el mensaje es del asistente y ya terminó de escribir (isTyping === false)
     */
-   
+
     if (
       lastMessage?.role === "user" ||
       (lastMessage?.role === "assistant" && !isTyping)
@@ -92,7 +92,7 @@ export default function SpeechClient() {
             <div ref={bottomRef} />
           </div>
         </div>
-        <div className="flex justify-center items-center p-1 ">
+        <div className="flex justify-center items-center p-1 align-items-end">
           <InputReq onSend={handleSendMessage} />
         </div>
       </div>

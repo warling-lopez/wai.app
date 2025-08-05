@@ -36,7 +36,10 @@ export default function SpeechClient() {
           setMessages((prev) => {
             const last = prev[prev.length - 1];
             if (last?.role === "assistant") {
-              return [...prev.slice(0, -1), { role: "assistant", content: generated }];
+              return [
+                ...prev.slice(0, -1),
+                { role: "assistant", content: generated },
+              ];
             } else {
               return [...prev, { role: "assistant", content: generated }];
             }
@@ -62,12 +65,15 @@ export default function SpeechClient() {
 
     // Guardar la última respuesta del asistente en sessionStorage solo en cliente
     const lastAssistantMessage = messages
-      .slice()  // Copiar el array para evitar mutaciones
-      .reverse()  // Invertir el orden
-      .find((m) => m.role === "assistant");  // Buscar el primer mensaje con el rol de "assistant"
-    
+      .slice() // Copiar el array para evitar mutaciones
+      .reverse() // Invertir el orden
+      .find((m) => m.role === "assistant"); // Buscar el primer mensaje con el rol de "assistant"
+
     if (lastAssistantMessage && typeof window !== "undefined") {
-      sessionStorage.setItem("Respuesta del modelo", JSON.stringify(lastAssistantMessage.content));
+      sessionStorage.setItem(
+        "Respuesta del modelo",
+        JSON.stringify(lastAssistantMessage.content)
+      );
     }
   }, [messages]);
 
@@ -82,7 +88,7 @@ export default function SpeechClient() {
             <div ref={bottomRef} />
           </div>
         </div>
-        <div className="flex justify-center items-center p-4">
+        <div className="flex justify-center items-center p-4 align-items-end">
           <InputReq onSend={handleSendMessage} />
         </div>
       </div>
