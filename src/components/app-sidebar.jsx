@@ -87,7 +87,7 @@ export function AppSidebar() {
     <>
       <Sidebar>
         <SidebarContent>
-          <SidebarGroup className="flex flex-nowrap overflow-x-hidden relative">
+          <SidebarGroup className="flex h-full flex-nowrap overflow-x-hidden relative">
             <SidebarGroupContent className={"flex justify-between flex-wrap "}>
               <SidebarGroupLabel>WALLY MENU</SidebarGroupLabel>
               <SidebarMenu className={"flex flex-col gap-2 text-sm"}>
@@ -108,7 +108,7 @@ export function AppSidebar() {
                 ))}
               </SidebarMenu>
             </SidebarGroupContent>
-            <div>
+            <div className="flex-1">
               <ChatsList />
             </div>
             <ImageUser />
@@ -120,7 +120,7 @@ export function AppSidebar() {
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center ">
           <div className="bg-background text-foreground w-[90%] max-w-3xl h-[500px] flex rounded-lg shadow-lg overflow-hidden">
             {/* Tabs laterales */}
-            <div className="w-1/4 bg-background p-4 space-y-2 border-r">
+            <div className="w-2/4 bg-background p-4 space-y-2 border-r">
               {settingsTabs.map((tab) => (
                 <button
                   key={tab}
@@ -137,7 +137,7 @@ export function AppSidebar() {
             </div>
 
             {/* Contenido dinámico */}
-            <div className="w-3/4 p-6 overflow-y-auto relative">
+            <div className="w-2/4 p-6 overflow-y-auto relative">
               <button
                 className="absolute top-4 right-4 text-gray-500 hover:text-black"
                 onClick={() => setShowSettings(false)}

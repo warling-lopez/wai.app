@@ -92,7 +92,7 @@ export default function SpeechClient() {
             <div ref={bottomRef} />
           </div>
         </div>
-        <div className="flex justify-center items-center p-1 align-items-end">
+        <div className="flex justify-center items-end p-1">
           <InputReq onSend={handleSendMessage} />
         </div>
       </div>

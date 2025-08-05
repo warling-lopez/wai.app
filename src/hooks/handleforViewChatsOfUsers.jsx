@@ -15,8 +15,7 @@ export default function ChatsList() {
       } = await Supabase.auth.getUser();
 
       if (user) {
-        const { data, error } = await Supabase
-          .from("Chats")
+        const { data, error } = await Supabase.from("Chats")
           .select("*")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
@@ -59,7 +58,7 @@ export default function ChatsList() {
 
   return (
     <div className="p-2">
-      <h2 className="text-sm text-accent mb-4">chats</h2>
+      <h2 className="text-sm text-accent mb-4">Historial de chats</h2>
       {Object.entries(groupedChats).map(([section, chats]) =>
         chats.length > 0 ? (
           <div key={section} className="mb-4">

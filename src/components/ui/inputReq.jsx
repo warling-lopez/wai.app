@@ -7,7 +7,6 @@ import STT from "@/components/ui/speech/STT";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 
-
 function InputReq({ className, type = "text", onSend, ...props }) {
   const [input, setInput] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
@@ -35,12 +34,13 @@ function InputReq({ className, type = "text", onSend, ...props }) {
   };
 
   return (
-    <div className="rounded-4xl pr-1 pl-1 border shadow-[0px_-20px_25px_[var(--inputReq-shadow)]] top-0 w-full md:w-[70vw] xl:w-[40vw] ">
+    <div className="rounded-4xl h-min px-1 border shadow-[0px_-20px_25px_[var(--inputReq-shadow)]] top-0 w-full md:w-[70vw] xl:w-[40vw] ">
       <textarea
         ref={inputRef}
         value={input}
         onChange={(e) => {
           setInput(e.target.value);
+          e.target.style.height = "auto";
           e.target.style.height = e.target.scrollHeight + "px";
         }}
         onKeyDown={(e) => {
@@ -51,8 +51,13 @@ function InputReq({ className, type = "text", onSend, ...props }) {
         }}
         placeholder="Pregúntale a WALLY"
         className={cn(
-          "max-h-[200px] rounded-2xl *: resize-none overflow-hidden placeholder:text-muted-foreground selection:bg-primary text-foreground selection:text-primary-foreground bg-background border-input flex w-full min-w-0 border-0 dark:bg-transparent px-3 py-2 text-base outline-none h-[60px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-xl",
-          className
+          "min-h-[60px] max-h-[200px] resize-none overflow-hidden", // Comportamiento
+          "w-full min-w-0 flex", // Tamaño y display
+          "px-3 py-2 rounded-2xl border-0 border-input", // Espaciado y bordes
+          "bg-background dark:bg-transparent text-foreground", // Colores
+          "placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground", // Placeholder y selección
+          "text-base md:text-xl outline-none", // Tipografía y foco
+          "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50" // Estados deshabilitado",
         )}
         rows={1}
         disabled={isLoading}
