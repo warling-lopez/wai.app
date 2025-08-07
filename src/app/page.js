@@ -84,7 +84,7 @@ export default function ProfilePage() {
             confirmButtonText: "Continuar",
           })
           .then(() => {
-            setTimeout(() => router.push("/chat"), 500);
+            setTimeout(() => router.replace("/chat"), 500);
           });
       }
       setCheckedAuth(true);
