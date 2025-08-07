@@ -10,26 +10,27 @@ function ImageUser() {
   const [username, setUsername] = useState(null);
 
   useEffect(() => {
-    const tokenString = localStorage.getItem(
-      "auth-token"
-    );
+    const tokenString = localStorage.getItem("auth-token");
     if (tokenString) {
       try {
         const parsed = JSON.parse(tokenString);
         setUserData(parsed);
 
-        const email = parsed?.user?.user_metadata?.email 
-           ?? parsed?.user_metadata?.email 
-           ?? null;
-        const name = parsed?.user?.user_metadata?.full_name 
-        ?? parsed?.user_metadata?.full_name 
-        ?? null;
+        const email =
+          parsed?.user?.user_metadata?.email ??
+          parsed?.user_metadata?.email ??
+          null;
+        const name =
+          parsed?.user?.user_metadata?.full_name ??
+          parsed?.user_metadata?.full_name ??
+          null;
         // Generar URL de avatar usando DiceBear
 
         if (email) {
           const diceBearUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${email}`;
           setAvatar(diceBearUrl);
-        }if (name) {
+        }
+        if (name) {
           setUsername(name);
         }
       } catch (e) {
