@@ -47,6 +47,9 @@ function ImageUser() {
     }
   }, []);
 
+  const emailFallback =
+    userData?.user?.user_metadata?.email || userData?.user_metadata?.email;
+
   if (!userData)
     return (
       <div>
@@ -57,14 +60,18 @@ function ImageUser() {
     );
 
   return (
-    <div className="bottom-0 bg-background rounded-md items-center justify-center mb-2 p-4">
+    <div className="bottom-0 bg-sidebar hover:bg-background rounded-md items-center justify-center mb-1 p-2">
       <div className="flex justify-around items-center place-content-center">
         <img
           src={avatar}
           alt="avatar"
           className="w-6 rounded-full bg-slate-400"
         />
-        <span>{username || "Anónimo"}</span>
+        <div className="flex flex-col items-start">
+          <span>{username || "Anónimo"}</span>
+          <span className="text-xs text-ring">{emailFallback || "Sin correo"}</span>
+        </div>
+        
       </div>
     </div>
   );
