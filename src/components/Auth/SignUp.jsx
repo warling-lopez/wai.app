@@ -66,6 +66,12 @@ function SignUp(props) {
   const handleSubmitWithGoogle = async () => {
     await Supabase.auth.signInWithOAuth({
       provider: "google",
+       options: {
+        redirectTo: `${window.location.origin}/chat`,
+      queryParams: {
+      access_type: 'offline',
+      prompt: 'consent',
+    }}
     });
   };
 
