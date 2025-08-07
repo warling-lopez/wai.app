@@ -28,7 +28,7 @@ export default function ProfilePage() {
       }
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(user));
       localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-      
+
       return user;
     };
     getUserInfo();
@@ -51,7 +51,7 @@ export default function ProfilePage() {
   // 2️⃣ Si no vino por hash, leer de sessionStorage
   useEffect(() => {
     if (authData === null) {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const stored = sessionStorage.getItem(STORAGE_KEY);
       if (stored) {
         try {
           setAuthData(JSON.parse(stored));
@@ -60,43 +60,5 @@ export default function ProfilePage() {
         }
       }
     }
-  }, [authData]);
-
-  // 3️⃣ Tras 3s, mostrar alerta y redirigir UNA VEZ
-  useEffect(() => {
-    if (checkedAuth) return;
-    const timer = setTimeout(() => {
-      if (!authData) {
-        swal
-          .fire({
-            title: "No tienes una cuenta!",
-            text: "Por favor, regístrate o verifica tu cuenta!",
-            icon: "info",
-            confirmButtonText: "Registrarse",
-          })
-          .then(() => router.push("/log/signup"));
-      } else {
-        swal
-          .fire({
-            title: "Bienvenido de nuevo",
-            text: "Estamos felices de verte otra vez.",
-            icon: "success",
-            confirmButtonText: "Continuar",
-          })
-          .then(() => {
-            setTimeout(() => router.push("/chat"), 500);
-          });
-      }
-      setCheckedAuth(true);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [authData, checkedAuth, router]);
-
-  return (
-    <div className="flex w-[100vw] h-[95vh] items-center justify-center">
-      <div className="flex flex-col items-center justify-center">
-        <BiLoaderAlt className="h-12 w-12 text-slate-600 animate-spin" />
-      </div>
-    </div>
-  );
+  }, [authData]);  
 }
