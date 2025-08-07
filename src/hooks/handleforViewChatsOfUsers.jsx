@@ -62,7 +62,7 @@ export default function ChatsList() {
       {Object.entries(groupedChats).map(([section, chats]) =>
         chats.length > 0 ? (
           <div key={section} className="mb-4">
-            <span className="text-xs text-muted-foreground mb-1">{section}</span>
+            <span className="text-xs text-muted-foreground mb-2">{section}</span>
             <ul className="space-y-2">
               {chats.map((chat) => (
                 <li
