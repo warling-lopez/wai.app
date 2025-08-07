@@ -2,7 +2,7 @@
 code[class*="language-"], pre[class*="language-"] {
   background: var(--codigo-pre) !important;
   font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 2;
   border-radius: 15px;
 }
 

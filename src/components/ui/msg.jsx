@@ -17,14 +17,14 @@ const Msg = ({ role, content }) => {
   return (
     <div
       className={cn(
-        "w-full flex mb-2",
+        "w-full flex",
         isUser ? "justify-end break-words overflow-hidden" : "justify-start"
       )}
     >
       <div
         ref={contentRef}
         className={cn(
-          "max-w-[80%] px-4 py-2 rounded-xl whitespace-pre-wrap",
+          "max-w-[95%] px-4 py-2 rounded-xl whitespace-pre-wrap",
           isUser
             ? "bg-primary break-words overflow-hidden text-foreground rounded-br-none"
             : "bg-background text-foreground rounded-bl-none"
