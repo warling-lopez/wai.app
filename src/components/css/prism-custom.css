@@ -1,0 +1,63 @@
+/* Fondo oscuro suave */
+code[class*="language-"], pre[class*="language-"] {
+  background: var(--codigo-pre) !important;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  border-radius: 15px;
+}
+
+/* Comentarios: gris azuloso, italic */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--ring);
+  font-style: italic;
+}
+
+/* Palabras clave: rosado suave */
+.token.keyword {
+  color: var(--chart-3);
+}
+
+/* Funciones y métodos: verde suave */
+.token.function {
+  color: var(--chart-5);
+}
+
+/* Strings: amarillo pálido */
+.token.string {
+  color: var(--foreground);
+}
+
+/* Números: naranja */
+.token.number {
+  color: var(--chart-1);
+}
+
+/* Variables y atributos: azul claro */
+.token.variable,
+.token.attr-name {
+  color: #8be9fd;
+}
+
+/* Añade sombra suave al bloque */
+pre[class*="language-"] {
+  box-shadow: 0 6px 15px var(--border);
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+/* Scrollbar personalizado */
+pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: var(--chart-3);
+  border-radius: 10px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: #0000f6;
+}
