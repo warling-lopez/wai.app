@@ -16,19 +16,27 @@ function ImageUser() {
         const parsed = JSON.parse(tokenString);
         setUserData(parsed);
 
-        const email =
-          parsed?.user?.user_metadata?.email ??
-          parsed?.user_metadata?.email ??
-          null;
         const name =
-          parsed?.user?.user_metadata?.full_name ??
-          parsed?.user_metadata?.full_name ??
+          parsed?.user?.user_metadata?.full_name ||
+          parsed?.user_metadata?.full_name ||
           null;
-        // Generar URL de avatar usando DiceBear
 
-        if (email) {
-          const diceBearUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${email}`;
+        const avatarDirect =
+          parsed?.user?.user_metadata?.avatar_url ||
+          parsed?.user_metadata?.avatar_url;
+
+        const emailFallback =
+          parsed?.user?.user_metadata?.email || parsed?.user_metadata?.email;
+        // Generar URL de avatar usando DiceBear
+        if (avatarDirect) {
+          setAvatar(avatarDirect);
+        } else if (emailFallback) {
+          const diceBearUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(
+            emailFallback
+          )}`;
           setAvatar(diceBearUrl);
+        } else {
+          setAvatar(null); // o una imagen por defecto
         }
         if (name) {
           setUsername(name);
