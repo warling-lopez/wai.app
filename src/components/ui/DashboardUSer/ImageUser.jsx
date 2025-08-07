@@ -11,7 +11,7 @@ function ImageUser() {
 
   useEffect(() => {
     const tokenString = localStorage.getItem(
-      "sb-hrgajcbtdlljpcwvenmf-auth-token"
+      "auth-token"
     );
     if (tokenString) {
       try {
