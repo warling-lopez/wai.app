@@ -9,7 +9,7 @@ import swal from "sweetalert2";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const STORAGE_KEY = "sb-hrgajcbtdlljpcwvenmf-auth-token";
+  const STORAGE_KEY = "auth-token";
 
   const [authData, setAuthData] = useState(null);
 
