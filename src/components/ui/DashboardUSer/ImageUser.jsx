@@ -65,7 +65,7 @@ function ImageUser() {
         <img
           src={avatar}
           alt="avatar"
-          className="w-6 rounded-full bg-slate-400"
+          className="w-8 rounded-full bg-slate-400"
         />
         <div className="flex flex-col items-start">
           <span>{username || "Anónimo"}</span>
