@@ -34,15 +34,16 @@ export function AppSidebar() {
     } = await Supabase.auth.getUser();
     try {
       if (user) {
-        const { data, error } = await Supabase.from("Chats").insert([
+        const titulo_chat = prompt("Ingrese el título del nuevo chat:", "Nuevo chat");
+        const { data: chatData, error } = await Supabase.from("Chats").insert([
           {
             user_id: user.id,
-            title: "Nuevo chat",
+            title: titulo_chat || "Nuevo chat",
           },
         ]);
 
-        console.log("Chat creado:", data);
-        router.push(`/chat/${user.id}`);
+        console.log("Chat creado:", chatData);
+        
       }
     } catch (error) {
       Swal.fire({

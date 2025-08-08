@@ -9,11 +9,14 @@ import { Supabase } from "@/Supabase/Supabase";
 export default function SpeechClientChat() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const bottomRef = useRef(null);
   const { id: chatId } = useParams();
 
   async function handleSendMessage(userInput) {
-    // Agregar mensaje del usuario al estado local
+    setErrorMessage(null);
+
+    // Mostrar el mensaje del usuario en UI local inmediatamente
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
     setIsTyping(true);
 
@@ -25,38 +28,45 @@ export default function SpeechClientChat() {
 
     if (userError || !user) {
       console.error("Error fetching user", userError);
+      setErrorMessage("Error al obtener usuario.");
+      setIsTyping(false);
       return;
     }
 
-    // Insertar mensaje del usuario
-    const { error: insertUserError } = await Supabase.from("msg").insert([
-      {
-        Chat_id: chatId,
-        role: "user",
-        content: userInput,
-        user_id: user.id,
-      },
-    ]);
-
-    if (insertUserError) {
-      console.error("Error insertando mensaje del usuario:", insertUserError);
-    }
-
     try {
+      // Enviar al backend para que guarde y genere respuesta
       const res = await fetch("/api/server", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userInput }),
+        body: JSON.stringify({
+          Chat_id: chatId,
+          message: userInput,
+          user_id: user.id,
+        }),
       });
 
       const data = await res.json();
+
+      if (res.status === 403 && data.error === "max_chat_limit_passed") {
+        setErrorMessage(
+          "Se alcanzó el límite máximo de mensajes en este chat."
+        );
+        setIsTyping(false);
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || "Error desconocido");
+      }
+
       const fullText = data.message || "";
 
+      // Mostrar la respuesta palabra a palabra en UI local
       let index = 0;
       const words = fullText.split(" ");
       let generated = "";
 
-      const interval = setInterval(async () => {
+      const interval = setInterval(() => {
         if (index < words.length) {
           generated += (index === 0 ? "" : " ") + words[index];
           setMessages((prev) => {
@@ -74,23 +84,7 @@ export default function SpeechClientChat() {
         } else {
           clearInterval(interval);
           setIsTyping(false);
-
-          // Guardar mensaje del asistente al terminar
-          const { error: insertBotError } = await Supabase.from("msg").insert([
-            {
-              Chat_id: chatId,
-              role: "assistant",
-              content: fullText,
-              user_id: user.id,
-            },
-          ]);
-
-          if (insertBotError) {
-            console.error(
-              "Error insertando respuesta del asistente:",
-              insertBotError
-            );
-          }
+          // Ya no guardamos nada aquí porque el backend hizo la inserción
         }
       }, 100);
     } catch (error) {
@@ -107,20 +101,9 @@ export default function SpeechClientChat() {
     async function loadMessages() {
       if (!chatId) return;
 
-      const {
-        data: { user },
-        error: userError,
-      } = await Supabase.auth.getUser();
-
-      if (userError || !user) {
-        console.error("Error obteniendo usuario:", userError);
-        return;
-      }
-
       const { data, error } = await Supabase.from("msg")
         .select("role, content")
         .eq("Chat_id", chatId)
-        .eq("user_id", user.id)
         .order("created_at", { ascending: true });
 
       if (error) {
@@ -160,6 +143,11 @@ export default function SpeechClientChat() {
           <div ref={bottomRef} />
         </div>
       </div>
+
+      {errorMessage && (
+        <div className="text-center text-red-600 p-2">{errorMessage}</div>
+      )}
+
       <div className="flex justify-center items-center p-1 align-items-end">
         <InputReq onSend={handleSendMessage} />
       </div>
