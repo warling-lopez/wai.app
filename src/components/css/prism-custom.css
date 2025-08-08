@@ -43,7 +43,7 @@ code[class*="language-"], pre[class*="language-"] {
 
 /* Añade sombra suave al bloque */
 pre[class*="language-"] {
-  box-shadow: 0 6px 15px var(--border);
+  box-shadow: 0 6px 15px var(--background);
   padding: 1rem;
   overflow-x: auto;
 }
