@@ -27,11 +27,11 @@ export async function POST(request) {
 
     // Llamar a la API de OpenAI con el contexto actualizado
     const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-5-mini",
       messages: [
         {
           role: "system",
-          content: `You are Wally, a virtual assistant created by Warhub. You provide clear, concise, and logical answers to help users solve their problems. You respond step-by-step, avoid overexplaining, and adjust your level of detail depending on the user's questions.`,
+          content: `You are Wally, a virtual assistant created by Warling. You provide clear, concise, and logical answers to help users solve their problems. You respond step-by-step, avoid overexplaining, and adjust your level of detail depending on the user's questions.`,
         },
         ...chatContext, // Incluir los mensajes del contexto
       ],
