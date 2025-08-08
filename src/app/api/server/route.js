@@ -13,11 +13,11 @@ const MAX_CONTEXT_LENGTH = 40;
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { chat_id, message, user_id } = body; // user_id viene por autenticación
+    const { Chat_id, message, user_id } = body; // user_id viene por autenticación
 
-    if (!chat_id || !message) {
+    if (!Chat_id || !message) {
       return new Response(
-        JSON.stringify({ error: "chat_id y message son requeridos" }),
+        JSON.stringify({ error: "Chat_id y message son requeridos" }),
         { status: 400 }
       );
     }
@@ -26,7 +26,7 @@ export async function POST(request) {
     const { data: countData, error: countError } = await Supabase
       .from("msg")
       .select("id", { count: "exact" })
-      .eq("chat_id", chat_id);
+      .eq("Chat_id", Chat_id);
 
     if (countError) throw countError;
 
@@ -44,7 +44,7 @@ export async function POST(request) {
     const { data: history, error: fetchError } = await Supabase
       .from("msg")
       .select("role, content")
-      .eq("chat_id", chat_id)
+      .eq("Chat_id", Chat_id)
       .order("created_at", { ascending: true });
 
     if (fetchError) throw fetchError;
@@ -68,12 +68,12 @@ export async function POST(request) {
 
     // 6. Guardar el mensaje del usuario
     await Supabase.from("msg").insert([
-      { chat_id, user_id, role: "user", content: message },
+      { Chat_id, user_id, role: "user", content: message },
     ]);
 
     // 7. Guardar la respuesta del asistente
     await Supabase.from("msg").insert([
-      { chat_id, user_id, role: "assistant", content: respuesta },
+      { Chat_id, user_id, role: "assistant", content: respuesta },
     ]);
 
     // 8. Enviar la respuesta al cliente
