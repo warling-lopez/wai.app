@@ -69,9 +69,10 @@ function ImageUser() {
         />
         <div className="flex flex-col items-start">
           <span>{username || "Anónimo"}</span>
-          <span className="text-xs text-ring">{emailFallback || "Sin correo"}</span>
+          <span className="text-xs text-ring">
+            {emailFallback || "Sin correo"}
+          </span>
         </div>
-        
       </div>
     </div>
   );

@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState } from "react";
 import { Supabase } from "@/Supabase/Supabase";
 import { useRouter } from "next/navigation";
@@ -8,32 +6,18 @@ import dayjs from "dayjs";
 export default function ChatsList() {
   const [groupedChats, setGroupedChats] = useState({});
   const router = useRouter();
-  const [userData, setUserData] = useState(null);
+
   useEffect(() => {
-    async function fetchUserData() {
+    async function fetchChats() {
       const {
         data: { user },
         error: userError,
       } = await Supabase.auth.getUser();
+
       if (user) {
-        setUserData(user);
-      } else if (userError) {
-        console.error("Error fetching user", userError);
-        return null;
-      }
-    }
-    fetchUserData();
-  }, []);
- 
-
-  useEffect(() => {
-    let subscription;
-
-    async function fetchChats() {
-      if (userData) {
         const { data, error } = await Supabase.from("Chats")
           .select("*")
-          .eq("user_id", userData.id)
+          .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
         if (error) {
@@ -46,21 +30,6 @@ export default function ChatsList() {
     }
 
     fetchChats();
-
-    if (userData) {
-      subscription = Supabase.from(`Chats:user_id=eq.${userData.id}`) // solo suscribirse a sus chats
-        .on("INSERT", (payload) => {
-          // cuando se inserte un chat nuevo, vuelves a cargar la lista
-          fetchChats();
-        })
-        .subscribe();
-    }
-
-    return () => {
-      if (subscription) {
-        Supabase.removeSubscription(subscription);
-      }
-    };
   }, []);
 
   function groupChatsByDate(chats) {
@@ -93,9 +62,7 @@ export default function ChatsList() {
       {Object.entries(groupedChats).map(([section, chats]) =>
         chats.length > 0 ? (
           <div key={section} className="mb-4">
-            <span className="text-xs text-muted-foreground mb-2">
-              {section}
-            </span>
+            <span className="text-xs text-muted-foreground mb-2">{section}</span>
             <ul className="space-y-2">
               {chats.map((chat) => (
                 <li
