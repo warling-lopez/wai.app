@@ -27,7 +27,7 @@ export async function POST(request) {
 
     // Llamar a la API de OpenAI con el contexto actualizado
     const chatCompletion = await openai.chat.completions.create({
-      model: "o4-mini",
+      model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
