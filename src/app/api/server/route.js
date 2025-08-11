@@ -15,40 +15,55 @@ let chatContext = [];
 export async function POST(request) {
   try {
     const body = await request.json();
-    const userMessage = body.message || "Hola"; // Fallback en caso de que esté vacío
+    const userMessage = body.message || "Hola"; // Fallback
 
     // Agregar el nuevo mensaje al contexto
     chatContext.push({ role: "user", content: userMessage });
 
-    // Mantener solo los últimos MAX_CONTEXT_LENGTH mensajes en el contexto
+    // Mantener solo los últimos MAX_CONTEXT_LENGTH mensajes
     if (chatContext.length > MAX_CONTEXT_LENGTH) {
-      chatContext.shift(); // Eliminar el primer mensaje (el más antiguo)
+      chatContext.shift();
     }
 
-    // Llamar a la API de OpenAI con el contexto actualizado
-    const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-4o-mini-2024-07-18",
-      messages: [
-        {
-          role: "system",
-          content: `You are Wally, a virtual assistant created by Warhub. You provide clear, concise, and logical answers to help users solve their problems. You respond step-by-step, avoid overexplaining, and adjust your level of detail depending on the user's questions.`,
-        },
-        ...chatContext, // Incluir los mensajes del contexto
-      ],
+    // Crear un ReadableStream para enviar datos en tiempo real
+    const stream = new ReadableStream({
+      async start(controller) {
+        // Llamar a la API en modo streaming
+        const completion = await openai.chat.completions.create({
+          model: "gpt-4o-mini-2024-07-18",
+          messages: [
+            {
+              role: "system",
+              content: `You are Wally, a virtual assistant created by Warhub. You provide clear, concise, and logical answers to help users solve their problems. You respond step-by-step, avoid overexplaining, and adjust your level of detail depending on the user's questions.`,
+            },
+            ...chatContext,
+          ],
+          stream: true,
+        });
+
+        let fullResponse = "";
+
+        // Recorrer cada fragmento que envía el modelo
+        for await (const chunk of completion) {
+          const content = chunk.choices[0]?.delta?.content || "";
+          if (content) {
+            fullResponse += content;
+            controller.enqueue(new TextEncoder().encode(content)); // Enviar fragmento al cliente
+          }
+        }
+
+        // Guardar la respuesta completa en el contexto
+        chatContext.push({ role: "assistant", content: fullResponse });
+
+        controller.close();
+      },
     });
 
-    // Obtener la respuesta del modelo
-    const respuesta = chatCompletion.choices[0].message.content;
-
-    // Agregar la respuesta del asistente al contexto
-    chatContext.push({ role: "assistant", content: respuesta });
-
-    console.log("Respuesta del modelo:", respuesta);
-
-    // Enviar la respuesta al cliente
-    return new Response(JSON.stringify({ message: respuesta }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+      },
     });
   } catch (error) {
     console.error("Error al llamar a OpenAI:", error);
