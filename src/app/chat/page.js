@@ -103,6 +103,7 @@ export default function SpeechClient() {
     }
   }
 
+
   useEffect(() => {
     async function loadMessages() {
       if (!chatId) return;
