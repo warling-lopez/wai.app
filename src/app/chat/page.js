@@ -5,6 +5,7 @@ import Msg from "@/components/ui/msg";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Supabase } from "@/Supabase/Supabase";
+import handleNewChat from "@/components/handle-newChat";
 
 export default function SpeechClient() {
   const [messages, setMessages] = useState([]);
@@ -15,7 +16,7 @@ export default function SpeechClient() {
   async function handleSendMessage(userInput) {
     // Validar chatId
     if (!chatId) {
-      console.error("No hay chatId, no se puede guardar el mensaje");
+      handleNewChat();
       return;
     }
 

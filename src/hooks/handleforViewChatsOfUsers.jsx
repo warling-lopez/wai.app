@@ -61,7 +61,7 @@ export default function ChatsList() {
       <h2 className="text-sm text-accent mb-4">Historial de chats</h2>
       {Object.entries(groupedChats).map(([section, chats]) =>
         chats.length > 0 ? (
-          <div key={section} className="mb-4">
+          <div key={section} className="mb-4 overflow-y-auto h-full">
             <span className="text-xs text-muted-foreground mb-2">{section}</span>
             <ul className="space-y-2">
               {chats.map((chat) => (

@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import SwitchTheme from "./ui/switchTheme";
 import ChatsList from "@/hooks/handleforViewChatsOfUsers";
-import { Supabase } from "@/Supabase/Supabase";
+import handleNewChat from "@/components/handle-newChat";
 
 export function AppSidebar() {
   const router = useRouter();
@@ -27,33 +27,7 @@ export function AppSidebar() {
   const [activeTab, setActiveTab] = useState("General");
   const settingsTabs = ["General", "Apariencia", "Avanzado"];
 
-  async function handleNewChat() {
-    const {
-      data: { user },
-      error: userError,
-    } = await Supabase.auth.getUser();
-    try {
-      if (user) {
-        const titulo_chat = prompt("Ingrese el título del nuevo chat:", "Nuevo chat");
-        const { data: chatData, error } = await Supabase.from("Chats").insert([
-          {
-            user_id: user.id,
-            title: titulo_chat || "Nuevo chat",
-          },
-        ]);
-
-        console.log("Chat creado:", chatData);
-        
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: `No se pudo crear el chat: ${error.message}`,
-      });
-      console.error("Error al crear el chat:", error);
-    }
-  }
+  
 
   const items = [
     { title: "Nuevo Chat", icon: SquarePen, action: handleNewChat },
@@ -88,8 +62,8 @@ export function AppSidebar() {
     <>
       <Sidebar>
         <SidebarContent>
-          <SidebarGroup className="flex h-full flex-nowrap overflow-x-hidden relative">
-            <SidebarGroupContent className={"flex justify-between flex-wrap "}>
+          <SidebarGroup className="flex h-full flex-nowrap relative">
+            <SidebarGroupContent className={"flex justify-between bg-sidebar flex-wrap sticky top-0"}>
               <SidebarGroupLabel>WALLY MENU</SidebarGroupLabel>
               <SidebarMenu className={"flex flex-col gap-2 text-sm"}>
                 {items.map((item) => (

@@ -5,9 +5,8 @@ import Prism from "prismjs";
 import "prismjs/components/prism-javascript";
 import "prismjs/components/prism-python";
 import "prismjs/components/prism-css";
-
 import "prismjs/themes/prism-tomorrow.css";
-import "@/components/css/prism-custom.css";
+import "@/components/css/custom-prism.css";
 
 
 const Msg = ({ role, content }) => {

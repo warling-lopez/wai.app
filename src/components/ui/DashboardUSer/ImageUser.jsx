@@ -60,18 +60,20 @@ function ImageUser() {
     );
 
   return (
-    <div className="bottom-0 bg-sidebar hover:bg-background rounded-md items-center justify-center mb-1 p-2">
-      <div className="flex justify-around items-center place-content-center">
-        <img
-          src={avatar}
-          alt="avatar"
-          className="w-8 rounded-full bg-slate-400"
-        />
-        <div className="flex flex-col items-start">
-          <span>{username || "Anónimo"}</span>
-          <span className="text-xs text-ring">
-            {emailFallback || "Sin correo"}
-          </span>
+    <div className="sticky bottom-0 bg-sidebar items-center justify-center w-full">
+      <div className=" bg-sidebar hover:bg-background rounded-md mb-2 py-2 px-4">
+        <div className="flex justify-around items-center place-content-center">
+          <img
+            src={avatar}
+            alt="avatar"
+            className="w-8 rounded-full bg-slate-400"
+          />
+          <div className="flex flex-col items-start">
+            <span>{username || "Anónimo"}</span>
+            <span className="text-xs text-ring">
+              {emailFallback || "Sin correo"}
+            </span>
+          </div>
         </div>
       </div>
     </div>
