@@ -6,29 +6,35 @@ import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Supabase } from "@/Supabase/Supabase";
 
-export default function SpeechClientChat() {
+export default function SpeechClient() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef(null);
   const { id: chatId } = useParams();
 
   async function handleSendMessage(userInput) {
-    // Agregar mensaje del usuario al estado local
+    // Validar chatId
+    if (!chatId) {
+      console.error("No hay chatId, no se puede guardar el mensaje");
+      return;
+    }
+
+    // Agregar mensaje del usuario localmente
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
     setIsTyping(true);
 
-    // Obtener usuario actual
+    // Obtener usuario
     const {
       data: { user },
       error: userError,
     } = await Supabase.auth.getUser();
 
     if (userError || !user) {
-      console.error("Error fetching user", userError);
+      console.error("Error obteniendo usuario", userError);
       return;
     }
 
-    // Insertar mensaje del usuario
+    // Insertar mensaje del usuario en Supabase
     const { error: insertUserError } = await Supabase.from("msg").insert([
       {
         Chat_id: chatId,
@@ -49,50 +55,49 @@ export default function SpeechClientChat() {
         body: JSON.stringify({ message: userInput }),
       });
 
-      const data = await res.json();
-      const fullText = data.message || "";
+      if (!res.body) throw new Error("No hay stream de respuesta");
 
-      let index = 0;
-      const words = fullText.split(" ");
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
       let generated = "";
 
-      const interval = setInterval(async () => {
-        if (index < words.length) {
-          generated += (index === 0 ? "" : " ") + words[index];
-          setMessages((prev) => {
-            const last = prev[prev.length - 1];
-            if (last?.role === "assistant") {
-              return [
-                ...prev.slice(0, -1),
-                { role: "assistant", content: generated },
-              ];
-            } else {
-              return [...prev, { role: "assistant", content: generated }];
-            }
-          });
-          index++;
-        } else {
-          clearInterval(interval);
-          setIsTyping(false);
+      // Crear mensaje vacío para el asistente
+      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
-          // Guardar mensaje del asistente al terminar
-          const { error: insertBotError } = await Supabase.from("msg").insert([
-            {
-              Chat_id: chatId,
-              role: "assistant",
-              content: fullText,
-              user_id: user.id,
-            },
-          ]);
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-          if (insertBotError) {
-            console.error(
-              "Error insertando respuesta del asistente:",
-              insertBotError
-            );
+        const chunk = decoder.decode(value, { stream: true });
+        generated += chunk;
+
+        setMessages((prev) => {
+          const last = prev[prev.length - 1];
+          if (last?.role === "assistant") {
+            return [
+              ...prev.slice(0, -1),
+              { role: "assistant", content: generated },
+            ];
           }
-        }
-      }, 100);
+          return [...prev, { role: "assistant", content: generated }];
+        });
+      }
+
+      setIsTyping(false);
+
+      // Guardar respuesta completa en Supabase
+      const { error: insertBotError } = await Supabase.from("msg").insert([
+        {
+          Chat_id: chatId,
+          role: "assistant",
+          content: generated,
+          user_id: user.id,
+        },
+      ]);
+
+      if (insertBotError) {
+        console.error("Error insertando respuesta del asistente:", insertBotError);
+      }
     } catch (error) {
       console.error("Error al obtener respuesta:", error);
       setMessages((prev) => [
@@ -103,6 +108,7 @@ export default function SpeechClientChat() {
     }
   }
 
+  // Cargar mensajes existentes
   useEffect(() => {
     async function loadMessages() {
       if (!chatId) return;
@@ -133,6 +139,7 @@ export default function SpeechClientChat() {
     loadMessages();
   }, [chatId]);
 
+  // Scroll automático al último mensaje
   useEffect(() => {
     const lastMessage = messages[messages.length - 1];
     if (
