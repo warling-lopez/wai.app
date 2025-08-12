@@ -21,7 +21,7 @@ export async function POST(request) {
     const stream = new ReadableStream({
       async start(controller) {
         const completion = await openai.chat.completions.create({
-          model: "gpt-4o-mini-2024-07-18",
+          model: "gpt-5-mini",
           messages: [
             {
               role: "system",
