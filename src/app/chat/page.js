@@ -97,7 +97,10 @@ export default function SpeechClient() {
       ]);
 
       if (insertBotError) {
-        console.error("Error insertando respuesta del asistente:", insertBotError);
+        console.error(
+          "Error insertando respuesta del asistente:",
+          insertBotError
+        );
       }
     } catch (error) {
       console.error("Error al obtener respuesta:", error);
@@ -168,7 +171,7 @@ export default function SpeechClient() {
           <div ref={bottomRef} />
         </div>
       </div>
-      <div className="flex justify-center items-center p-1 align-items-end">
+      <div className="flex justify-center p-1 items-end">
         <InputReq onSend={handleSendMessage} />
       </div>
     </div>

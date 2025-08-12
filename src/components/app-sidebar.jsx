@@ -10,7 +10,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import ImageUser from "@/components/ui/DashboardUSer/ImageUser";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
@@ -25,15 +28,22 @@ export function AppSidebar() {
   const router = useRouter();
   const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState("General");
-  const settingsTabs = ["General", "Apariencia", "Avanzado"];
+  const { openMovile, setOpenMobile } = useSidebar(); // <-- Usa el contexto
 
-  
+  const settingsTabs = ["General", "Apariencia", "Avanzado"];
 
   const items = [
     { title: "Nuevo Chat", icon: SquarePen, action: handleNewChat },
     { title: "Search", url: "#", icon: Search },
     { title: "Calendar", url: "#", icon: Calendar },
-    { title: "Settings", icon: Settings, action: () => setShowSettings(true) },
+    {
+      title: "Settings",
+      icon: Settings,
+      action: () => {
+        setShowSettings(true);
+        setOpenMobile(false); // Aquí se controla el sidebar real
+      },
+    },
   ];
 
   const saveLoader = () => {
@@ -63,8 +73,18 @@ export function AppSidebar() {
       <Sidebar>
         <SidebarContent>
           <SidebarGroup className="flex h-full flex-nowrap relative">
-            <SidebarGroupContent className={"flex justify-between bg-sidebar flex-wrap sticky top-0"}>
+            <SidebarGroupContent
+              className={
+                "flex justify-between bg-sidebar flex-wrap sticky top-0"
+              }
+            >
               <SidebarGroupLabel>WALLY MENU</SidebarGroupLabel>
+              <div>
+                <SidebarTrigger
+                  style={{ fontSize: "10rem" }}
+                  className="sticky top-0 text-4xl"
+                />
+              </div>
               <SidebarMenu className={"flex flex-col gap-2 text-sm"}>
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
@@ -90,12 +110,19 @@ export function AppSidebar() {
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-
       {showSettings && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center ">
-          <div className="bg-background text-foreground w-[90%] max-w-3xl h-[500px] flex rounded-lg shadow-lg overflow-hidden">
-            {/* Tabs laterales */}
-            <div className="w-2/4 bg-background p-4 space-y-2 border-r">
+          <div className="bg-background text-foreground w-[90%] max-w-3xl h-[500px] flex flex-col md:flex-row rounded-lg shadow-lg overflow-hidden relative">
+            {/* Botón cerrar siempre arriba */}
+            <button
+              className="absolute top-4 right-4 text-gray-500 hover:text-black z-10"
+              onClick={() => setShowSettings(false)}
+            >
+              ✖
+            </button>
+
+            {/* Tabs: arriba en móvil, izquierda en escritorio */}
+            <div className=" md:w-1/4 bg-background p-4 md:space-y-0 md:space-x-0 flex md:flex-col flex-row md:border-r border-b md:border-b-0">
               {settingsTabs.map((tab) => (
                 <button
                   key={tab}
@@ -112,14 +139,7 @@ export function AppSidebar() {
             </div>
 
             {/* Contenido dinámico */}
-            <div className="w-2/4 p-6 overflow-y-auto relative">
-              <button
-                className="absolute top-4 right-4 text-gray-500 hover:text-black"
-                onClick={() => setShowSettings(false)}
-              >
-                ✖
-              </button>
-
+            <div className="p-6 overflow-y-auto relative">
               {activeTab === "General" && (
                 <div>
                   <h2 className="text-xl font-bold mb-4">
