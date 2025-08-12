@@ -60,9 +60,9 @@ function ImageUser() {
     );
 
   return (
-    <div className="sticky bottom-0 bg-sidebar items-center justify-center w-full">
-      <div className=" bg-sidebar hover:bg-background rounded-md mb-2 py-2 px-4">
-        <div className="flex justify-around items-center place-content-center">
+    <div className="sticky bottom-0 bg-sidebar">
+      <div className=" bg-sidebar hover:bg-background rounded-md mb-2 py-2 px-4 w-full">
+        <div className="flex items-center">
           <img
             src={avatar}
             alt="avatar"
