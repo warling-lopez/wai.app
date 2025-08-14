@@ -5,6 +5,7 @@ import Msg from "@/components/ui/msg";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Supabase } from "@/Supabase/Supabase";
+import Image from "next/image";
 
 export default function SpeechClient() {
   const [messages, setMessages] = useState([]);
@@ -96,7 +97,10 @@ export default function SpeechClient() {
       ]);
 
       if (insertBotError) {
-        console.error("Error insertando respuesta del asistente:", insertBotError);
+        console.error(
+          "Error insertando respuesta del asistente:",
+          insertBotError
+        );
       }
     } catch (error) {
       console.error("Error al obtener respuesta:", error);
@@ -162,8 +166,17 @@ export default function SpeechClient() {
       <div className="flex flex-col w-full items-center p-4 overflow-y-auto">
         <div className="w-full md:w-[70vw] xl:w-[40vw]">
           {messages.map((msg, index) => (
-            <Msg key={index} role={msg.role} content={msg.content} />
+            <div key={index}>
+              {msg.content.startsWith("http") ? (
+                <div className="max-w-[256px] rounded-xl">
+                  <Image src={msg.content} alt="Generated" />
+                </div>
+              ) : (
+                <Msg role={msg.role} content={msg.content} />
+              )}
+            </div>
           ))}
+
           <div ref={bottomRef} />
         </div>
       </div>
