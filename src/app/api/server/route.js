@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { Supabase } from "@/Supabase/Supabase";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -12,6 +13,10 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const userMessage = body.message || "";
+    const contextMsg = body.context || chatContext.slice(-MAX_CONTEXT_LENGTH);
+
+    chatContext.push({ role: "user", content: userMessage });
+    if (chatContext.length > MAX_CONTEXT_LENGTH) chatContext.shift();
 
     const functions = [
       {
@@ -27,9 +32,6 @@ export async function POST(request) {
         },
       },
     ];
-
-    chatContext.push({ role: "user", content: userMessage });
-    if (chatContext.length > MAX_CONTEXT_LENGTH) chatContext.shift();
 
     const stream = new ReadableStream({
       async start(controller) {

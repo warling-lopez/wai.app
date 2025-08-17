@@ -21,7 +21,10 @@ export default function SpeechClient() {
     }
 
     // Agregar mensaje del usuario localmente
-    setMessages((prev) => [...prev, { role: "user", content: userInput }]);
+    setMessages((prev = mensages) => [
+      ...prev,
+      { role: "user", content: userInput },
+    ]);
     setIsTyping(true);
 
     // Obtener usuario
@@ -97,7 +100,10 @@ export default function SpeechClient() {
       ]);
 
       if (insertBotError) {
-        console.error("Error insertando respuesta del asistente:", insertBotError);
+        console.error(
+          "Error insertando respuesta del asistente:",
+          insertBotError
+        );
       }
     } catch (error) {
       console.error("Error al obtener respuesta:", error);

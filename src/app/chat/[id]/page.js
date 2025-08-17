@@ -16,7 +16,7 @@ export default function SpeechClient() {
   async function handleSendMessage(userInput) {
     // Validar chatId
     if (!chatId) {
-      console.error("No hay chatId, no se puede guardar el mensaje");
+      console.error("No hay un chat, no se puede guardar el mensaje");
       return;
     }
 
@@ -53,7 +53,7 @@ export default function SpeechClient() {
       const res = await fetch("/api/server", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userInput }),
+        body: JSON.stringify({ context: messages, message: userInput }),
       });
 
       if (!res.body) throw new Error("No hay stream de respuesta");

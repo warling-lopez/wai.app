@@ -53,7 +53,7 @@ export default function SpeechClientTEST() {
       const res = await fetch("/api/server", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userInput }),
+        body: JSON.stringify({ context: messages, message: userInput }),
       });
 
       if (!res.body) throw new Error("No hay stream de respuesta");
