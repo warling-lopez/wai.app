@@ -16,7 +16,7 @@ export default function SpeechClientTEST() {
   async function handleSendMessage(userInput) {
     // Validar chatId
     if (!chatId) {
-      console.error("No hay chatId, no se puede guardar el mensaje");
+      console.error("No hay un chat, no se puede guardar el mensaje");
       return;
     }
 
