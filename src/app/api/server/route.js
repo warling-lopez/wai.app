@@ -7,16 +7,22 @@ const openai = new OpenAI({
 });
 
 const MAX_CONTEXT_LENGTH = 30;
-let chatContext = [];
 
 export async function POST(request) {
   try {
     const body = await request.json();
     const userMessage = body.message || "";
-    const contextMsg = body.context || chatContext.slice(-MAX_CONTEXT_LENGTH);
-
-    chatContext.push({ role: "user", content: userMessage });
-    if (chatContext.length > MAX_CONTEXT_LENGTH) chatContext.shift();
+    const context = body.context || [];
+    // --- Paso 2: Construir el contexto para la IA ---
+    // Incluye el rol de sistema, el historial recuperado y el nuevo mensaje
+    const chatHistoryForAI = [
+      {
+        role: "system",
+        content: `You are Wally, a virtual assistant created by Warhub. You provide clear, concise, and logical answers.`,
+      },
+      ...context,
+      { role: "user", content: userMessage },
+    ];
 
     const functions = [
       {
@@ -37,15 +43,10 @@ export async function POST(request) {
       async start(controller) {
         let fullMessage = { content: "", function_call: null };
 
+        // --- Paso 3: Enviar el contexto a OpenAI ---
         const completion = await openai.chat.completions.create({
           model: "gpt-5-mini",
-          messages: [
-            {
-              role: "system",
-              content: `You are Wally, a virtual assistant created by Warhub. You provide clear, concise, and logical answers.`,
-            },
-            ...chatContext,
-          ],
+          messages: chatHistoryForAI,
           functions,
           function_call: "auto",
           stream: true,
@@ -73,15 +74,16 @@ export async function POST(request) {
           }
         }
 
-        chatContext.push({ role: "assistant", content: fullMessage.content });
+        // --- Paso 4: Guardar la respuesta de la IA en Supabase ---
+        await Supabase.from("msg").insert([
+          { role: "assistant", content: fullMessage.content, user_id: user, Chat_id: chatId }
+        ]);
 
-        // Si el modelo decide generar imagen
+        // Si el modelo decide generar imagen...
         if (fullMessage.function_call?.name === "generate_image") {
           const args = JSON.parse(fullMessage.function_call.arguments);
           const validSizes = ["1024x1024"];
-          let imageSize = validSizes.includes(args.size)
-            ? args.size
-            : "1024x1024";
+          let imageSize = validSizes.includes(args.size) ? args.size : "1024x1024";
 
           const imageResp = await openai.images.generate({
             model: "dall-e-2",
@@ -91,10 +93,10 @@ export async function POST(request) {
           });
 
           const imageUrl = imageResp.data[0].url;
-          chatContext.push({
-            role: "assistant",
-            content: `![Image](${imageUrl})`,
-          });
+          // Guardar la URL de la imagen en la base de datos
+          await Supabase.from("msg").insert([
+            { role: "assistant", content: `![Image](${imageUrl})`, user_id: user, Chat_id: chatId }
+          ]);
           controller.enqueue(
             new TextEncoder().encode(`\n![Image](${imageUrl})`)
           );

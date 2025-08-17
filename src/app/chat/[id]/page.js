@@ -50,10 +50,11 @@ export default function SpeechClient() {
     }
 
     try {
+    
       const res = await fetch("/api/server", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ context: messages, message: userInput }),
+        body: JSON.stringify({context: messages, message: userInput }),
       });
 
       if (!res.body) throw new Error("No hay stream de respuesta");
@@ -136,6 +137,7 @@ export default function SpeechClient() {
       if (error) {
         console.error("Error al cargar mensajes:", error);
       } else {
+        console.log("Mensajes cargados:", data);
         setMessages(data);
       }
     }
