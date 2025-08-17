@@ -76,7 +76,7 @@ export async function POST(request) {
 
         // --- Paso 4: Guardar la respuesta de la IA en Supabase ---
         await Supabase.from("msg").insert([
-          { role: "assistant", content: fullMessage.content, user_id: user, Chat_id: chatId }
+          { role: "assistant", content: fullMessage.content, }
         ]);
 
         // Si el modelo decide generar imagen...

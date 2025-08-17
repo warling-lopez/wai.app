@@ -132,7 +132,8 @@ export default function SpeechClient() {
         .select("role, content")
         .eq("Chat_id", chatId)
         .eq("user_id", user.id)
-        .order("created_at", { ascending: true });
+        .order("created_at", { ascending: true })
+        .limit(10); // Limitar a los últimos 100 mensajes
 
       if (error) {
         console.error("Error al cargar mensajes:", error);
