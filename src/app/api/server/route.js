@@ -18,7 +18,7 @@ export async function POST(request) {
     const chatHistoryForAI = [
       {
         role: "system",
-        content: `You are Wally, a virtual assistant created by Warhub. You provide clear, concise, and logical answers.`,
+        content: `You are Wally, a virtual assistant created by Warhub. You provide clear, concise, and logical answers to help users solve their problems. You respond step-by-step, avoid overexplaining, and adjust your level of detail depending on the user's questions.`,
       },
       ...context,
       { role: "user", content: userMessage },
