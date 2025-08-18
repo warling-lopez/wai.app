@@ -36,7 +36,6 @@ export async function POST(request) {
           },
           required: ["prompt"],
         },
-        
       },
     ];
 
