@@ -53,8 +53,8 @@ export default function RootLayout({ children }) {
         className={`grid w-full bg-background text-foreground ${roboto.className}`}
       >
         <SidebarTrigger
-          style={{ fontSize: "10rem" }}
-          className="sticky top-0 text-4xl pt-2"
+          style={{ fontSize: "8rem" }}
+          className="sticky top-0 text-4xl"
         />
         <div className="m-2">{children}</div>
       </main>
