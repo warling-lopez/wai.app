@@ -6,7 +6,6 @@ const openai = new OpenAI({
   baseURL: process.env.OPENAI_API_URL,
 });
 
-const MAX_CONTEXT_LENGTH = 30;
 
 export async function POST(request) {
   try {
