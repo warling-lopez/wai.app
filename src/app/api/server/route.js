@@ -6,6 +6,7 @@ const openai = new OpenAI({
   baseURL: process.env.OPENAI_API_URL,
 });
 
+export const runtime = "edge"; // 👈 evita el límite de 10s en Hobby
 
 export async function POST(request) {
   try {
@@ -31,7 +32,7 @@ export async function POST(request) {
           type: "object",
           properties: {
             prompt: { type: "string" },
-            size: { type: "string", enum: ["1024x1024", ] },
+            size: { type: "string", enum: ["1024x1024"] },
           },
           required: ["prompt"],
         },
@@ -50,6 +51,9 @@ export async function POST(request) {
           function_call: "auto",
           stream: true,
         });
+
+        // --- IMPORTANTE: encolar algo rápido para evitar timeout inicial ---
+        controller.enqueue(new TextEncoder().encode("..."));
 
         for await (const chunk of completion) {
           const delta = chunk.choices[0]?.delta;
@@ -75,14 +79,16 @@ export async function POST(request) {
 
         // --- Paso 4: Guardar la respuesta de la IA en Supabase ---
         await Supabase.from("msg").insert([
-          { role: "assistant", content: fullMessage.content, }
+          { role: "assistant", content: fullMessage.content },
         ]);
 
         // Si el modelo decide generar imagen...
         if (fullMessage.function_call?.name === "generate_image") {
           const args = JSON.parse(fullMessage.function_call.arguments);
           const validSizes = ["1024x1024"];
-          let imageSize = validSizes.includes(args.size) ? args.size : "1024x1024";
+          let imageSize = validSizes.includes(args.size)
+            ? args.size
+            : "1024x1024";
 
           const imageResp = await openai.images.generate({
             model: "dall-e-2",
@@ -94,7 +100,12 @@ export async function POST(request) {
           const imageUrl = imageResp.data[0].url;
           // Guardar la URL de la imagen en la base de datos
           await Supabase.from("msg").insert([
-            { role: "assistant", content: `![Image](${imageUrl})`, user_id: user, Chat_id: chatId }
+            {
+              role: "assistant",
+              content: `![Image](${imageUrl})`,
+              user_id: user,
+              Chat_id: chatId,
+            },
           ]);
           controller.enqueue(
             new TextEncoder().encode(`\n![Image](${imageUrl})`)
