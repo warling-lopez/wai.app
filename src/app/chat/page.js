@@ -21,7 +21,10 @@ export default function SpeechClient() {
     }
 
     // Agregar mensaje del usuario localmente
-    setMessages((prev) => [...prev, { role: "user", content: userInput }]);
+    setMessages((prev = mensages) => [
+      ...prev,
+      { role: "user", content: userInput },
+    ]);
     setIsTyping(true);
 
     // Obtener usuario

@@ -58,16 +58,16 @@ export default function ChatsList() {
 
   return (
     <div className="p-2">
-      <h2 className="text-sm text-accent mb-4">Historial de chats</h2>
+      <h2 className="text-sm text-foreground mb-4">Chats</h2>
       {Object.entries(groupedChats).map(([section, chats]) =>
         chats.length > 0 ? (
-          <div key={section} className="mb-4 overflow-y-auto h-full">
-            <span className="text-xs text-muted-foreground mb-2">{section}</span>
-            <ul className="space-y-2">
+          <div key={section} className="mb-2 overflow-y-auto h-full">
+            <span className="p-2 text-xs text-muted-foreground">{section}</span>
+            <ul>
               {chats.map((chat) => (
                 <li
                   key={chat.id}
-                  className="p-2 text-md rounded-md hover:bg-background text-foreground cursor-pointer"
+                  className="p-[7px] text-md rounded-md hover:bg-background text-foreground cursor-pointer"
                   onClick={() => router.push(`/chat/${chat.id}`)}
                 >
                   {chat.title}
