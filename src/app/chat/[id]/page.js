@@ -138,7 +138,6 @@ export default function SpeechClient() {
       if (error) {
         console.error("Error al cargar mensajes:", error);
       } else {
-        console.log("Mensajes cargados:", data);
         setMessages(data);
       }
     }

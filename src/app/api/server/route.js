@@ -32,7 +32,7 @@ export async function POST(request) {
           type: "object",
           properties: {
             prompt: { type: "string" },
-            size: { type: "string", enum: ["256x256", "512x512", "1024x1024"] },
+            size: { type: "string", enum: ["1024x1024", ] },
           },
           required: ["prompt"],
         },
