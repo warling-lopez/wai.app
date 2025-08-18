@@ -53,7 +53,7 @@ export async function POST(request) {
         });
 
         // --- IMPORTANTE: encolar algo rápido para evitar timeout inicial ---
-        controller.enqueue(new TextEncoder().encode("..."));
+        
 
         for await (const chunk of completion) {
           const delta = chunk.choices[0]?.delta;
