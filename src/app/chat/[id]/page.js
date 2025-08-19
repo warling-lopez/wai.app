@@ -19,6 +19,10 @@ export default function SpeechClient() {
       console.error("No hay un chat, no se puede guardar el mensaje");
       return;
     }
+    if (messages.length >= 100) {
+      alert("Has alcanzado el límite de 100 mensajes en este chat.");
+      return;
+    }
 
     // Agregar mensaje del usuario localmente
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
@@ -50,11 +54,10 @@ export default function SpeechClient() {
     }
 
     try {
-    
       const res = await fetch("/api/server", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({context: messages, message: userInput }),
+        body: JSON.stringify({ context: messages, message: userInput }),
       });
 
       if (!res.body) throw new Error("No hay stream de respuesta");

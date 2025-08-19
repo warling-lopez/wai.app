@@ -110,31 +110,7 @@
   --inputReq-shadow: oklch(0.707 0.022 261.325);
   --codigo-pre: oklch(14.958% 0.00002 271.152);
 }
-pre {
-  background-color: var(--codigo-pre);
-  margin-top: -10px;
-}
-code {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  line-height: 1.5;
-  border-radius: 5px;
-  padding: 0.1rem 0.2rem;
-  background: var(--border);
-}
-h3 {
-  font-size: 1.5rem;
-}
-ol {
-  list-style-type: disc;
-  padding-left: 1.5rem;
-}
-ol > li {
-  margin: -10px 0px;
-}
-p {
-  margin: 0;
-}
+
 @layer base {
   body {
     @apply bg-background text-foreground;
