@@ -65,9 +65,9 @@ pre::-webkit-scrollbar-thumb {
 pre::-webkit-scrollbar-track {
   background: var(--background);
 }
-h1 {
+main>h1 {
   font-size: 2.5rem;
-}h2 {
+}main>h2 {
   font-size: 2rem;
 }
 h3 {
@@ -82,4 +82,6 @@ ol > li {
 }
 main > p {
   margin: 40px 0;
+  margin-bottom: 60px;
+  
 }
