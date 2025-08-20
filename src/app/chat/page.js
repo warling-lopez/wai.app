@@ -5,7 +5,7 @@ import Msg from "@/components/ui/msg";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Supabase } from "@/Supabase/Supabase";
-import handleNewChat from "@/components/handle-newChat";
+import Image from "next/image";
 
 export default function SpeechClient() {
   const [messages, setMessages] = useState([]);
@@ -15,16 +15,13 @@ export default function SpeechClient() {
 
   async function handleSendMessage(userInput) {
     // Validar chatId
-    if (!chatId) {
-      handleNewChat();
+    if (messages.length >= 100) {
+      alert("Has alcanzado el límite de 100 mensajes en este chat.");
       return;
     }
 
     // Agregar mensaje del usuario localmente
-    setMessages((prev = mensages) => [
-      ...prev,
-      { role: "user", content: userInput },
-    ]);
+    setMessages((prev) => [...prev, { role: "user", content: userInput }]);
     setIsTyping(true);
 
     // Obtener usuario
@@ -56,7 +53,7 @@ export default function SpeechClient() {
       const res = await fetch("/api/server", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userInput }),
+        body: JSON.stringify({ context: messages, message: userInput }),
       });
 
       if (!res.body) throw new Error("No hay stream de respuesta");
@@ -134,7 +131,8 @@ export default function SpeechClient() {
         .select("role, content")
         .eq("Chat_id", chatId)
         .eq("user_id", user.id)
-        .order("created_at", { ascending: true });
+        .order("created_at", { ascending: true })
+        .limit(100); // Limitar a los últimos 100 mensajes
 
       if (error) {
         console.error("Error al cargar mensajes:", error);
@@ -165,16 +163,25 @@ export default function SpeechClient() {
   }, [messages, isTyping]);
 
   return (
-    <div className="grid h-[90vh] w-full col-span-2">
+    <div className="grid h-full w-full col-span-2">
       <div className="flex flex-col w-full items-center p-4 overflow-y-auto">
         <div className="w-full md:w-[70vw] xl:w-[40vw]">
           {messages.map((msg, index) => (
-            <Msg key={index} role={msg.role} content={msg.content} />
+            <div key={index}>
+              {msg.content.startsWith("http") ? (
+                <div className="max-w-[256px] rounded-xl">
+                  <Image src={msg.content} alt="Generated" />
+                </div>
+              ) : (
+                <Msg role={msg.role} content={msg.content} />
+              )}
+            </div>
           ))}
+
           <div ref={bottomRef} />
         </div>
       </div>
-      <div className="flex justify-center p-1 items-end">
+      <div className="flex sticky bottom-0 bg-background justify-center items-center p-1">
         <InputReq onSend={handleSendMessage} />
       </div>
     </div>

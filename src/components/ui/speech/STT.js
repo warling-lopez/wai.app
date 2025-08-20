@@ -69,16 +69,17 @@ export default function STT({ className, onTranscribe }) {
 
   return (
     <Button
-      variant="ghost"
+      variant="tool_outline"
       onClick={manejarClick}
-      className={className || "flex justify-center align-center"}
+      className={className || "relative left-0"}
+      
       disabled={loading}
     >
       {loading
         ? "Transcribiendo..."
         : recording
         ? <StopIcon />
-        : <MicIcon />}
+        : <MicIcon sx={{ fontSize: 20 }} />}
     </Button>
   );
 }

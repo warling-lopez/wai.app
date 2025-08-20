@@ -79,12 +79,6 @@ export function AppSidebar() {
               }
             >
               <SidebarGroupLabel>WALLY MENU</SidebarGroupLabel>
-              <div>
-                <SidebarTrigger
-                  style={{ fontSize: "10rem" }}
-                  className="sticky top-0 text-4xl"
-                />
-              </div>
               <SidebarMenu className={"flex flex-col gap-2 text-sm"}>
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>

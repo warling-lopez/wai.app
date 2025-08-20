@@ -15,10 +15,7 @@ export default function SpeechClient() {
 
   async function handleSendMessage(userInput) {
     // Validar chatId
-    if (!chatId) {
-      console.error("No hay un chat, no se puede guardar el mensaje");
-      return;
-    }
+
     if (messages.length >= 100) {
       alert("Has alcanzado el límite de 100 mensajes en este chat.");
       return;
@@ -167,7 +164,7 @@ export default function SpeechClient() {
   }, [messages, isTyping]);
 
   return (
-    <div className="grid h-[90vh] w-full col-span-2">
+    <div className="grid h-full w-full col-span-2">
       <div className="flex flex-col w-full items-center p-4 overflow-y-auto">
         <div className="w-full md:w-[70vw] xl:w-[40vw]">
           {messages.map((msg, index) => (
@@ -185,7 +182,7 @@ export default function SpeechClient() {
           <div ref={bottomRef} />
         </div>
       </div>
-      <div className="flex justify-center items-center p-1 align-items-end">
+      <div className="flex sticky bottom-5 bg-background justify-center items-center p-1">
         <InputReq onSend={handleSendMessage} />
       </div>
     </div>
