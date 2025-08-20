@@ -45,7 +45,7 @@ export async function POST(request) {
 
         // --- Paso 3: Enviar el contexto a OpenAI ---
         const completion = await openai.chat.completions.create({
-          model: "gpt-5-mini",
+          model: "gpt-5-nano",
           messages: chatHistoryForAI,
           functions,
           function_call: "auto",

@@ -65,7 +65,11 @@ pre::-webkit-scrollbar-thumb {
 pre::-webkit-scrollbar-track {
   background: var(--background);
 }
-
+h1 {
+  font-size: 2.5rem;
+}h2 {
+  font-size: 2rem;
+}
 h3 {
   font-size: 1.5rem;
 }
