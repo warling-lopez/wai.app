@@ -22,6 +22,7 @@ function InputReq({ className, type = "text", onSend, ...props }) {
   const fileInputRef = useRef(null);
   const { id: chatId } = useParams();
 
+  // Escuchar sessionStorage para TTS
   useEffect(() => {
     const interval = setInterval(() => {
       const nuevaRespuesta =
@@ -31,6 +32,7 @@ function InputReq({ className, type = "text", onSend, ...props }) {
     return () => clearInterval(interval);
   }, []);
 
+  // Extraer texto de archivos
   const extractTextFromFile = async (file) => {
     if (file.type === "text/plain") {
       return await file.text();
@@ -74,15 +76,21 @@ function InputReq({ className, type = "text", onSend, ...props }) {
     for (let fileObj of previews) {
       if (fileObj.file) {
         const text = await extractTextFromFile(fileObj.file);
-        if (text) filesText.push(`---${fileObj.name}---\n${text}`);
+        if (text) filesText.push({ name: fileObj.name, text });
       }
     }
 
-    const combinedMessage =
-      userInput +
-      (filesText.length ? "\nAttached files content:\n" + filesText.join("\n") : "");
+    // 1️⃣ Enviar solo el mensaje del usuario para mostrar en la UI
+    await onSend(userInput, []);
 
-    await onSend(combinedMessage, previews);
+    // 2️⃣ Enviar los textos de los archivos como un bloque aparte
+    if (filesText.length) {
+      const combinedFilesText = filesText
+        .map(f => `---${f.name}---\n${f.text}`)
+        .join("\n");
+      await onSend(combinedFilesText, previews);
+    }
+
     setIsLoading(false);
     setPreviews([]); // Limpiar archivos después de enviar
   };

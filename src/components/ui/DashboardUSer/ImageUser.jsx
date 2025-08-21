@@ -11,39 +11,47 @@ function ImageUser() {
 
   useEffect(() => {
     const tokenString = localStorage.getItem("auth-token");
-    if (tokenString) {
-      try {
-        const parsed = JSON.parse(tokenString);
-        setUserData(parsed);
+    if (!tokenString) return; // no hay token
 
-        const name =
-          parsed?.user?.user_metadata?.full_name ||
-          parsed?.user_metadata?.full_name ||
-          null;
+    try {
+      const parsed = JSON.parse(tokenString);
 
-        const avatarDirect =
-          parsed?.user?.user_metadata?.avatar_url ||
-          parsed?.user_metadata?.avatar_url;
-
-        const emailFallback =
-          parsed?.user?.user_metadata?.email || parsed?.user_metadata?.email;
-        // Generar URL de avatar usando DiceBear
-        if (avatarDirect) {
-          setAvatar(avatarDirect);
-        } else if (emailFallback) {
-          const diceBearUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(
-            emailFallback
-          )}`;
-          setAvatar(diceBearUrl);
-        } else {
-          setAvatar(null); // o una imagen por defecto
-        }
-        if (name) {
-          setUsername(name);
-        }
-      } catch (e) {
-        console.error("Error al parsear o generar avatar:", e);
+      // Si vino con error en el JSON
+      if (parsed.error_code) {
+        console.warn("Token inválido o expirado:", parsed.error_description);
+        localStorage.removeItem("auth-token"); // lo limpias
+        return;
       }
+
+      setUserData(parsed);
+
+      const name =
+        parsed?.user?.user_metadata?.full_name ||
+        parsed?.user_metadata?.full_name ||
+        null;
+
+      const avatarDirect =
+        parsed?.user?.user_metadata?.avatar_url ||
+        parsed?.user_metadata?.avatar_url;
+
+      const emailFallback =
+        parsed?.user?.user_metadata?.email || parsed?.user_metadata?.email;
+
+      if (avatarDirect) {
+        setAvatar(avatarDirect);
+      } else if (emailFallback) {
+        const diceBearUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(
+          emailFallback
+        )}`;
+        setAvatar(diceBearUrl);
+      } else {
+        setAvatar(null);
+      }
+
+      if (name) setUsername(name);
+    } catch (e) {
+      console.error("Error al parsear token:", e);
+      localStorage.removeItem("auth-token");
     }
   }, []);
 

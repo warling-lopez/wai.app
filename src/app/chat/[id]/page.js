@@ -6,26 +6,64 @@ import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Supabase } from "@/Supabase/Supabase";
 import Image from "next/image";
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
+import mammoth from "mammoth";
+import WallyAlert from '@/components/ui/limited';
 
 export default function SpeechClient() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef(null);
+  const [files, setFiles] = useState("");
   const { id: chatId } = useParams();
 
-  async function handleSendMessage(userInput) {
-    // Validar chatId
+  // 🔥 ESTADO PARA MANEJAR LA ALERTA
+  const [alert, setAlert] = useState(null);
 
-    if (messages.length >= 100) {
-      alert("Has alcanzado el límite de 100 mensajes en este chat.");
+  // 🔥 FUNCIONES PARA MOSTRAR DIFERENTES TIPOS DE ALERTAS
+  const showLimitAlert = () => {
+    setAlert({
+      type: 'limit',
+      title: 'Límite de mensajes alcanzado',
+      message: 'Has alcanzado el límite de 100 mensajes en este chat.',
+      buttonText: 'Entendido',
+      onButtonClick: () => setAlert(null)
+    });
+  };
+
+  const showErrorAlert = () => {
+    setAlert({
+      type: 'error',
+      title: 'Error de conexión',
+      message: 'No se pudo conectar con Wally. Intenta de nuevo.',
+      buttonText: 'Reintentar',
+      onButtonClick: () => {
+        setAlert(null);
+        // Aquí podrías reintentar la última acción
+      }
+    });
+  };
+
+  const showNetworkAlert = () => {
+    setAlert({
+      type: 'limit',
+      title: 'Límite de mensajes alcanzado',
+      message: 'Has alcanzado el límite de este chat para plan gratuito.',
+      buttonText: 'Actualizar',
+      onButtonClick: () => setAlert(null)
+    });
+  };
+
+  async function handleSendMessage(userInput, previews = []) {
+    // 🔥 VERIFICAR LÍMITE Y MOSTRAR ALERTA
+    if (messages.length >= 20) {
+      showLimitAlert();
       return;
     }
 
-    // Agregar mensaje del usuario localmente
+    // Agregar mensaje visible del usuario
     setMessages((prev) => [...prev, { role: "user", content: userInput }]);
-    setIsTyping(true);
 
-    // Obtener usuario
     const {
       data: { user },
       error: userError,
@@ -33,46 +71,80 @@ export default function SpeechClient() {
 
     if (userError || !user) {
       console.error("Error obteniendo usuario", userError);
+      showErrorAlert();
       return;
     }
 
-    // Insertar mensaje del usuario en Supabase
+    // Guardar solo mensaje de usuario
     const { error: insertUserError } = await Supabase.from("msg").insert([
-      {
-        Chat_id: chatId,
-        role: "user",
-        content: userInput,
-        user_id: user.id,
-      },
+      { Chat_id: chatId, role: "user", content: userInput, user_id: user.id },
     ]);
-
     if (insertUserError) {
       console.error("Error insertando mensaje del usuario:", insertUserError);
+      showErrorAlert();
+      return;
     }
 
+    // Extraer textos de archivos y guardar como bloque separado
+    if (previews.length > 0) {
+      const filesText = [];
+      for (let fileObj of previews) {
+        if (fileObj.file) {
+          let text = "";
+          if (fileObj.file.type === "text/plain")
+            text = await fileObj.file.text();
+          else if (fileObj.file.type === "application/pdf") {
+            const arrayBuffer = await fileObj.file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer })
+              .promise;
+            for (let i = 1; i <= pdf.numPages; i++) {
+              const page = await pdf.getPage(i);
+              const content = await page.getTextContent();
+              text += content.items.map((item) => item.str).join(" ") + "\n";
+            }
+          } else if (
+            fileObj.file.type ===
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+            fileObj.file.type === "application/msword"
+          ) {
+            const arrayBuffer = await fileObj.file.arrayBuffer();
+            const result = await mammoth.extractRawText({ arrayBuffer });
+            text = result.value;
+          }
+          if (text) filesText.push(`---${fileObj.name}---\n${text}`);
+        }
+      }
+
+      if (filesText.length) {
+        const combinedFilesText = filesText.join("\n");
+        setFiles(combinedFilesText);
+      }
+    }
+
+    // Enviar mensaje al backend para generar respuesta
+    setIsTyping(true);
     try {
       const res = await fetch("/api/server", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ context: messages, message: userInput }),
+        body: JSON.stringify({
+          context: messages,
+          message: userInput,
+          files: files,
+        }),
       });
 
       if (!res.body) throw new Error("No hay stream de respuesta");
-
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let generated = "";
 
-      // Crear mensaje vacío para el asistente
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        generated += chunk;
-
+        generated += decoder.decode(value, { stream: true });
         setMessages((prev) => {
           const last = prev[prev.length - 1];
           if (last?.role === "assistant") {
@@ -87,7 +159,6 @@ export default function SpeechClient() {
 
       setIsTyping(false);
 
-      // Guardar respuesta completa en Supabase
       const { error: insertBotError } = await Supabase.from("msg").insert([
         {
           Chat_id: chatId,
@@ -96,20 +167,20 @@ export default function SpeechClient() {
           user_id: user.id,
         },
       ]);
-
       if (insertBotError) {
-        console.error(
-          "Error insertando respuesta del asistente:",
-          insertBotError
-        );
+        console.error("Error insertando respuesta del asistente:", insertBotError);
+        showErrorAlert();
       }
-    } catch (error) {
-      console.error("Error al obtener respuesta:", error);
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Error de conexión." },
-      ]);
+    } catch (err) {
+      console.error("Error al obtener respuesta:", err);
       setIsTyping(false);
+      
+      // 🔥 MOSTRAR ALERTA DE ERROR EN LUGAR DE alert()
+      if (err.message.includes('network') || err.message.includes('fetch')) {
+        showNetworkAlert();
+      } else {
+        showErrorAlert();
+      }
     }
   }
 
@@ -125,6 +196,7 @@ export default function SpeechClient() {
 
       if (userError || !user) {
         console.error("Error obteniendo usuario:", userError);
+        showErrorAlert();
         return;
       }
 
@@ -133,10 +205,11 @@ export default function SpeechClient() {
         .eq("Chat_id", chatId)
         .eq("user_id", user.id)
         .order("created_at", { ascending: true })
-        .limit(100); // Limitar a los últimos 100 mensajes
+        .limit(100);
 
       if (error) {
         console.error("Error al cargar mensajes:", error);
+        showErrorAlert();
       } else {
         setMessages(data);
       }
@@ -153,7 +226,6 @@ export default function SpeechClient() {
       (lastMessage?.role === "assistant" && !isTyping)
     ) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-
       if (lastMessage?.role === "assistant" && typeof window !== "undefined") {
         sessionStorage.setItem(
           "Respuesta del modelo",
@@ -164,12 +236,29 @@ export default function SpeechClient() {
   }, [messages, isTyping]);
 
   return (
-    <div className="grid h-full w-full col-span-2">
+    <div className="grid h-full w-full col-span-2 relative">
+      
+      {/* 🔥 MOSTRAR ALERTA SI EXISTE */}
+      {alert && (
+        <div className="fixed top-4 left-4 right-4 z-50">
+          <WallyAlert
+            type={alert.type}
+            title={alert.title}
+            message={alert.message}
+            buttonText={alert.buttonText}
+            onButtonClick={alert.onButtonClick}
+            onClose={() => setAlert(null)}
+          />
+        </div>
+      )}
+
       <div className="flex flex-col w-full items-center p-4 overflow-y-auto">
         <div className="w-full md:w-[70vw] xl:w-[40vw]">
           {messages.map((msg, index) => (
             <div key={index}>
-              {msg.content.startsWith("http") ? (
+              {msg.role === "user_file" ? null : msg.content.startsWith(
+                  "http"
+                ) ? (
                 <div className="max-w-[256px] rounded-xl">
                   <Image src={msg.content} alt="Generated" />
                 </div>
@@ -178,13 +267,52 @@ export default function SpeechClient() {
               )}
             </div>
           ))}
-
           <div ref={bottomRef} />
         </div>
       </div>
+      
       <div className="flex sticky bottom-5 bg-background justify-center items-center p-1">
         <InputReq onSend={handleSendMessage} />
       </div>
     </div>
   );
 }
+
+// 🔥 VERSIÓN ALTERNATIVA CON HOOK PERSONALIZADO (MÁS LIMPIA)
+/*
+import WallyAlert, { useWallyAlert } from '@/components/ui/limited';
+
+export default function SpeechClient() {
+  // ... otros estados
+  const { alert, showLimitAlert, showErrorAlert, hideAlert } = useWallyAlert();
+
+  async function handleSendMessage(userInput, previews = []) {
+    if (messages.length >= 100) {
+      showLimitAlert('Has alcanzado el límite de 100 mensajes en este chat.');
+      return;
+    }
+    
+    try {
+      // ... lógica existente
+    } catch (err) {
+      showErrorAlert('No se pudo conectar con Wally. Intenta de nuevo.');
+    }
+  }
+
+  return (
+    <div className="grid h-full w-full col-span-2 relative">
+      {alert && (
+        <div className="fixed top-4 left-4 right-4 z-50">
+          <WallyAlert
+            type={alert.type}
+            title={alert.title}
+            message={alert.message}
+            onClose={hideAlert}
+          />
+        </div>
+      )}
+      // ... resto del JSX
+    </div>
+  );
+}
+*/

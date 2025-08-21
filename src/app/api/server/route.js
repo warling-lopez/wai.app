@@ -13,6 +13,7 @@ export async function POST(request) {
     const body = await request.json();
     const userMessage = body.message || "";
     const context = body.context || [];
+    const files = body.files || "";
     // --- Paso 2: Construir el contexto para la IA ---
     // Incluye el rol de sistema, el historial recuperado y el nuevo mensaje
     const chatHistoryForAI = [
