@@ -25,8 +25,8 @@ export default function SpeechClient() {
     setAlert({
       type: 'limit',
       title: 'Límite de mensajes alcanzado',
-      message: 'Has alcanzado el límite de 100 mensajes en este chat.',
-      buttonText: 'Entendido',
+      message: 'Has alcanzado el límite de este chat para el plan gratuito.',
+      buttonText: 'Actualizar',
       onButtonClick: () => setAlert(null)
     });
   };
@@ -46,11 +46,14 @@ export default function SpeechClient() {
 
   const showNetworkAlert = () => {
     setAlert({
-      type: 'limit',
-      title: 'Límite de mensajes alcanzado',
-      message: 'Has alcanzado el límite de este chat para plan gratuito.',
-      buttonText: 'Actualizar',
-      onButtonClick: () => setAlert(null)
+      type: 'error',
+      title: 'Error de red',
+      message: 'No se pudo conectar con el servidor. Intenta de nuevo más tarde.',
+      buttonText: 'Reintentar',
+      onButtonClick: () => {
+        setAlert(null);
+        // Aquí podrías reintentar la última acción
+      }
     });
   };
 
@@ -130,6 +133,8 @@ export default function SpeechClient() {
         body: JSON.stringify({
           context: messages,
           message: userInput,
+          user: user.id,
+          chatId: chatId,
           files: files,
         }),
       });

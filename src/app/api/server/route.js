@@ -13,7 +13,8 @@ export async function POST(request) {
     const body = await request.json();
     const userMessage = body.message || "";
     const context = body.context || [];
-    const files = body.files || "";
+    const user = body.user || "default_user";
+    const chatId = body.chatId || "default_chat";
     // --- Paso 2: Construir el contexto para la IA ---
     // Incluye el rol de sistema, el historial recuperado y el nuevo mensaje
     const chatHistoryForAI = [
@@ -52,6 +53,7 @@ export async function POST(request) {
           function_call: "auto",
           stream: true,
         });
+        console.log(completion)
 
         // --- IMPORTANTE: encolar algo rápido para evitar timeout inicial ---
         
