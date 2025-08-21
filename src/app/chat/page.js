@@ -39,7 +39,7 @@ export default function SpeechClient() {
       buttonText: 'Reintentar',
       onButtonClick: () => {
         setAlert(null);
-        Router.push('/log/signup');
+        router.push('/log/signup');
         // Aquí podrías reintentar la última acción
       }
     });
@@ -75,7 +75,7 @@ export default function SpeechClient() {
 
     if (userError || !user) {
       console.error("Error obteniendo usuario", userError);
-      
+      router.push('/log/signup');
       showErrorAlert();
       return;
     }
@@ -86,7 +86,6 @@ export default function SpeechClient() {
     ]);
     if (insertUserError) {
       console.error("Error insertando mensaje del usuario:", insertUserError);
-      router.push('/log/signup');
       showErrorAlert();
       return;
     }
