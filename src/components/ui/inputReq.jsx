@@ -8,10 +8,11 @@ import StopIcon from "@mui/icons-material/Stop";
 import { ToolSelector } from "@/components/ui/tools/select-tools";
 import { MdOutlineAttachFile } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import handleNewChat from "@/components/handle-newChat";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
 import mammoth from "mammoth";
+import { Supabase } from "@/Supabase/Supabase";
 
 function InputReq({ className, type = "text", onSend, ...props }) {
   const [input, setInput] = useState("");
@@ -21,7 +22,7 @@ function InputReq({ className, type = "text", onSend, ...props }) {
   const inputRef = useRef(null);
   const fileInputRef = useRef(null);
   const { id: chatId } = useParams();
-
+  const router = useRouter();
   // Escuchar sessionStorage para TTS
   useEffect(() => {
     const interval = setInterval(() => {
@@ -61,6 +62,15 @@ function InputReq({ className, type = "text", onSend, ...props }) {
   };
 
   const handleSendClick = async (userInput = input) => {
+    const {
+      data: { user },
+      error: userError,
+    } = await Supabase.auth.getUser();
+    if (userError || !user) {
+      console.error("Error obteniendo usuario", userError);
+      router.push('/log/signup'); // Redirigir al usuario si no está autenticado
+      return;
+    }
     if (!chatId) {
       handleNewChat();
       return;

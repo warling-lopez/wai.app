@@ -2,7 +2,7 @@
 
 import { InputReq } from "@/components/ui/inputReq";
 import Msg from "@/components/ui/msg";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Supabase } from "@/Supabase/Supabase";
 import Image from "next/image";
@@ -16,7 +16,7 @@ export default function SpeechClient() {
   const bottomRef = useRef(null);
   const [files, setFiles] = useState("");
   const { id: chatId } = useParams();
-
+  const router = useRouter();
   // 🔥 ESTADO PARA MANEJAR LA ALERTA
   const [alert, setAlert] = useState(null);
 
@@ -74,7 +74,7 @@ export default function SpeechClient() {
 
     if (userError || !user) {
       console.error("Error obteniendo usuario", userError);
-      showErrorAlert();
+      router.push('/log/signup'); // Redirigir al usuario si no está autenticado
       return;
     }
 

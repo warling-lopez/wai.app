@@ -75,8 +75,7 @@ export default function SpeechClient() {
 
     if (userError || !user) {
       console.error("Error obteniendo usuario", userError);
-      router.push('/log/signup');
-      showErrorAlert();
+      router.push('/log/signup'); // Redirigir al usuario si no está autenticado
       return;
     }
 
@@ -203,6 +202,7 @@ export default function SpeechClient() {
 
       if (userError || !user) {
         console.error("Error obteniendo usuario:", userError);
+        router.push('/log/signup'); // Redirigir al usuario si no está autenticado
         showErrorAlert();
         return;
       }
