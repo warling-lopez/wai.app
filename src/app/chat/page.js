@@ -16,7 +16,7 @@ export default function SpeechClient() {
   const bottomRef = useRef(null);
   const [files, setFiles] = useState("");
   const { id: chatId } = useParams();
-  const Router = useRouter();
+  const router = useRouter();
   // 🔥 ESTADO PARA MANEJAR LA ALERTA
   const [alert, setAlert] = useState(null);
 
@@ -86,6 +86,7 @@ export default function SpeechClient() {
     ]);
     if (insertUserError) {
       console.error("Error insertando mensaje del usuario:", insertUserError);
+      router.push('/log/signup');
       showErrorAlert();
       return;
     }
