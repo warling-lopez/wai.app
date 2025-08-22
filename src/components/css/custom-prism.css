@@ -86,7 +86,7 @@ main > p {
   margin-bottom: 60px;
 }
 p > img {
-  max-width: 350px;
+  max-width: 70%;
   height: auto;
   border-radius: 12px;
 }
