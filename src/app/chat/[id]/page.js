@@ -9,6 +9,7 @@ import Image from "next/image";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
 import mammoth from "mammoth";
 import WallyAlert from '@/components/ui/limited';
+import "@/components/css/custom-prism.css"; // Asegúrate de que este archivo exista y contenga tus estilos globales
 
 export default function SpeechClient() {
   const [messages, setMessages] = useState([]);

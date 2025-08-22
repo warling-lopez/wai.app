@@ -5,7 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { useEffect, useState } from "react";
 import { Roboto } from "next/font/google";
-
+import "@/components/css/custom-prism.css"; // Asegúrate de que este archivo exista y contenga tus estilos globales
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "700"],
